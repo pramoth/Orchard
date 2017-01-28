@@ -1,0 +1,19 @@
+﻿@model FacebookConnect.Models.FacebookSettingsPart
+<fieldset>
+    <legend>@T("<u><b>Facebook Application Settings</b></u>")</legend>
+    <div>
+        @Html.LabelFor(m => m.AppId, @T("Your application ID"))
+        @Html.EditorFor(m => m.AppId)
+        @Html.ValidationMessageFor(m => m.AppId, "*")
+    </div>
+    <div>
+        @Html.LabelFor(m => m.AppSecret, @T("Your application secret"))
+        @Html.EditorFor(m => m.AppSecret)
+        @Html.ValidationMessageFor(m => m.AppSecret, "*")
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Permissions, @T("Permissions needed"))
+        @Html.EditorFor(m => m.Permissions)
+        @Html.ValidationMessageFor(m => m.Permissions, "*")
+    </div>
+</fieldset>

@@ -1,0 +1,12 @@
+Name: FacebookConnect
+AntiForgery: enabled
+Author: Suraj Suresh
+Website: http://orchardproject.net
+Version: 0.5
+OrchardVersion: 1.0
+Description: Description for the module
+Features:
+    FacebookConnect:
+        Description: Allows connecting account with Facebook.
+        Dependencies: Orchard.Users
+		Category: (Social Volunteer-ism 2.0)

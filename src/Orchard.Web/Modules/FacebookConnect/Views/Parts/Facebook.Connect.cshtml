@@ -1,0 +1,39 @@
+﻿@using System.Web.Mvc;
+
+@if (!Model.IsConnected)
+{
+<div id='fb-root'></div>
+
+<script>
+    var graphApiInitialized = false;
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '@(Model.Settings.AppId)',
+            status: true,
+            cookie: true,
+            xfbml: true
+        });
+        graphApiInitialized = true;
+    };
+    (function () {
+        var e = document.createElement('script');
+        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+        e.async = true;
+        document.getElementById('fb-root').appendChild(e);
+    } ());
+
+    function redir() {
+        window.location = '@(Model.RedirectUrl)';
+    }
+</script>
+<fb:login-button onlogin="redir()"  perms="@(Model.Settings.Permissions)">Login using your Facebook</fb:login-button>
+}
+
+@if (Request.IsAuthenticated)
+{
+   @* @T("Connected with Facebook, fb_<strong>{0}</strong>!", WorkContext.CurrentUser.UserName)*@
+}
+else
+{ 
+@*    <span class="login">@T("*If you don't have an account here yet, you'd be redirected to registration form.")</span>*@
+}
