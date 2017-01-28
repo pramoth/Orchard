@@ -1,4 +1,8 @@
 ﻿@using System.Web.Mvc;
+@{
+    Script.Require("jQuery").AtHead();
+    Script.Require("AngularJs").AtHead();
+}
 
 @if (!Model.IsConnected)
 {

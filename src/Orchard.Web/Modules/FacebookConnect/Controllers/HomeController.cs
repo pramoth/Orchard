@@ -30,59 +30,59 @@ namespace FacebookConnect.Controllers
         {
             // Acquire Facebook settings
             var settings = _services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
-            
+
             ActionResult result = Redirect("~/");
 
-            var client = new FacebookApp(new FacebookSettings { AppId = settings.AppId, AppSecret = settings.AppSecret });
-            var authorizer = new Authorizer(client);
-            if (authorizer.IsAuthorized())
+            var client = new FacebookClient("");
+
+            result = Redirect("~/");
+            var u = _auth.GetAuthenticatedUser();
+
+            dynamic fbUser = client.Get("me");
+            string mail = (string)fbUser.email;
+
+            // If already logged in update the account info
+            if (u != null)
             {
-                result = Redirect("~/");
-                var session = client.Session;
-                var u = _auth.GetAuthenticatedUser();
-
-                dynamic fbUser = client.Get("me");
-                string mail = (string)fbUser.email;
-
-                // If already logged in update the account info
-                if (u != null) {
-                    var current = u.As<FacebookUserPart>();
-                    if (string.IsNullOrWhiteSpace(current.UserId))
-                    {
-                        current.UserId = session.UserId;   
-                    }
-                }
-                // If not logged in check if exists in db and log on or redirect to register screen
-                else
+                var current = u.As<FacebookUserPart>();
+                if (string.IsNullOrWhiteSpace(current.UserId))
                 {
-                    var user = _services
-                        .ContentManager
-                        .Query<UserPart, UserPartRecord>()
-                        .Where<UserPartRecord>(x => x.Email == mail).List<IUser>().SingleOrDefault();
-
-                    if (user == null)
-                    {
-                        // Create new user - redirect to form - there is no such binding between FB user Id and any Orchard user
-                        //result = RedirectToAction("Register", "Account", new { Area = "Orchard.Users" });
-
-                        user = _membershipService.CreateUser(new CreateUserParams((string)fbUser.name, "SomeP@ssw00rd", (string)fbUser.email, "", "H&I^T^&***Y^", true
-                                                          ));
-                    }
-
-                    _auth.SignIn(user, true);
+                    //fb id current.UserId = 
                 }
             }
+            // If not logged in check if exists in db and log on or redirect to register screen
+            else
+            {
+                var user = _services
+                    .ContentManager
+                    .Query<UserPart, UserPartRecord>()
+                    .Where<UserPartRecord>(x => x.Email == mail).List<IUser>().SingleOrDefault();
+
+                if (user == null)
+                {
+                    // Create new user - redirect to form - there is no such binding between FB user Id and any Orchard user
+                    //result = RedirectToAction("Register", "Account", new { Area = "Orchard.Users" });
+
+                    user = _membershipService.CreateUser(new CreateUserParams((string)fbUser.name, "SomeP@ssw00rd", (string)fbUser.email, "", "H&I^T^&***Y^", true
+                                                      ));
+                }
+
+                _auth.SignIn(user, true);
+            }
+
             return result;
         }
-        public ActionResult Connected() {
-            // Acquire Facebook settings
-            var settings = _services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
-
-            var client = new FacebookApp(new FacebookSettings { AppId = settings.AppId, AppSecret = settings.AppSecret });
-            var authorizer = new Authorizer(client) {Perms = settings.Permissions};
-            if (authorizer.IsAuthorized()) {
-                return Redirect("~/");
-            }
+        public ActionResult Connected()
+        {
+            //            // Acquire Facebook settings
+            //            var settings = _services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
+            //
+            //            var client = new FacebookApp(new FacebookSettings { AppId = settings.AppId, AppSecret = settings.AppSecret });
+            //            var authorizer = new Authorizer(client) { Perms = settings.Permissions };
+            //            if (authorizer.IsAuthorized())
+            //            {
+            //                return Redirect("~/");
+            //            }
             return Redirect("~/");
         }
     }
