@@ -12,15 +12,15 @@ module App.Services {
     }
 
     export interface IFb {
-        logIn(callback: (response: any) => any): void;
+        login(callback: (response: any) => any): void;
         getLoginStatus(callback: (response: any) => any, forceGetLogInStatus: boolean): void;
         api(url: string, callback: (response: any) => any): void;
     }
 
-    var FB: IFb;
-    var Setting: ISetting;
+    declare var FB: IFb;
+    declare var Setting: ISetting;
 
-    class FacebookService {
+    export class FacebookService {
 
         constructor(
             private $q: ng.IQService,
@@ -31,12 +31,12 @@ module App.Services {
         logIn(): ng.IPromise<any> {
 
             var deferred = this.$q.defer();
-            FB.logIn((response: any) => {
+            FB.login((response: any) => {
 
                 try {
                     if (response.status === 'connected') {
 
-                        deferred.resolve(response);
+                        deferred.resolve(response.authResponse);
 
                     } else if (response.status === 'not_authorized') {
                         // The person is logged into Facebook, but not your app.
@@ -91,17 +91,18 @@ module App.Services {
         }
 
 
-        getUserInfo(user: any) {
+        getUserInfo(authResponse:any):ng.IPromise<any> {
+            console.log(authResponse);
             var deferred = this.$q.defer();
-            FB.api('/me?fields=picture.width(540).height(540),id,first_name,email', (response: any) => {
-                if (user.facebookAppScopeUserId === response.id) {
-                    user.profileUrl = response.picture.data.url;
-                    user.name = response.first_name;
-                    user.email = response.email;
-                    deferred.resolve({ data: user });
-                } else {
-                    deferred.reject("error getUserInfo");
-                }
+            var graphApiUrl = sprintf('/%s?fields=picture.width(540).height(540),id,first_name,email', authResponse.userID);
+            FB.api(graphApiUrl, (response: any) => {
+                var userInfo:any = {};
+                userInfo.facebookAppScopeUserId = response.id;
+                userInfo.facebookToken = authResponse.accessToken;
+                userInfo.profileUrl = response.picture.data.url;
+                userInfo.name = response.first_name;
+                userInfo.email = response.email;
+                deferred.resolve(userInfo);
             });
 
             return deferred.promise;
@@ -274,4 +275,7 @@ module App.Services {
         }
 
     }
+
+    angular.module("facebookConnect")
+        .service("facebookService", ["$q", "$http", "$document", FacebookService]);
 }

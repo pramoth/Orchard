@@ -34,18 +34,33 @@ var App;
         Contorllers.ControllerBase = ControllerBase;
         var FacebookLogInController = (function (_super) {
             __extends(FacebookLogInController, _super);
-            function FacebookLogInController($http) {
+            function FacebookLogInController(facebookService) {
                 _super.call(this);
-                this.$http = $http;
+                this.facebookService = facebookService;
                 this.userName = "aaron";
-                this.isLogIn = true;
+                this.isLogIn = false;
             }
-            FacebookLogInController.prototype.showMessage = function () {
-                this.delay(function () { return alert("Hello"); }, 2000);
+            FacebookLogInController.prototype.logIn = function () {
+                var _this = this;
+                this.facebookService.logIn()
+                    .then(function (authResponse) {
+                    return _this.facebookService.getUserInfo(authResponse);
+                })
+                    .then(function (userInfo) {
+                    console.log(userInfo);
+                    _this.isLogIn = true;
+                })
+                    .catch(function (response) {
+                    console.log(response);
+                    alert("Error, please reload page and try again");
+                })
+                    .finally(function () {
+                    console.log("finally");
+                });
             };
             return FacebookLogInController;
         }(ControllerBase));
         angular.module("facebookConnect")
-            .controller("facebookLogInController", ["$http", FacebookLogInController]);
+            .controller("facebookLogInController", ["facebookService", FacebookLogInController]);
     })(Contorllers = App.Contorllers || (App.Contorllers = {}));
 })(App || (App = {}));

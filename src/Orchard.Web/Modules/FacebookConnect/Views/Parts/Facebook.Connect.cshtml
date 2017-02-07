@@ -1,10 +1,15 @@
 ﻿@using System.Web.Mvc;
 @{
+    Style.Require("Bootstrap");
+    Style.Include("facebookConnectStyle.css").AtHead();
+
     Script.Require("jQuery").AtHead();
+    Script.Require("Bootstrap");
     Script.Include("sprintf.js").AtHead();
     Script.Require("AngularJs").AtHead();
     Script.Include("facebookConnect.js").AtHead();//with name and path
     Script.Include("facebookLogInController.js").AtHead();//with name and path
+    Script.Include("facebookService.js").AtHead();//with name and path
 
     WorkContext.Layout.Head.Add(New.FacebookSdk(), "1");
 }
@@ -12,11 +17,8 @@
 
 <div ng-app="facebookConnect">
     <div ng-controller="facebookLogInController as vm">
-
-        <a  ng-if="!vm.isLogIn" href="">connect with facebook</a>
-
-        <a ng-if="vm.isLogIn" href="">profile</a>
-
+        <a ng-class="!vm.isLogIn? 'show':'hidden'" ng-click="vm.logIn()" href="">connect with facebook</a>
+        <a ng-class="vm.isLogIn? 'show':'hidden'" href="">profile</a>
     </div>
 </div>
 

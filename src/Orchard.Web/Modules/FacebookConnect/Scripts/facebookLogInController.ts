@@ -1,7 +1,7 @@
 ﻿module App.Contorllers {
 
     $(document).on("fbLoaded", (e: JQueryEventObject, ...args: any[]) => {
-        console.log("e=%s, args[0]=%s",e, args[0]);
+        console.log("e=%s, args[0]=%s", e, args[0]);
     });
 
     export abstract class ControllerBase {
@@ -24,19 +24,33 @@
     class FacebookLogInController extends ControllerBase {
 
         userName = "aaron";
-        isLogIn = true;
+        isLogIn = false;
 
-        constructor(private $http: ng.IHttpService) {
+        constructor(private facebookService: Services.FacebookService) {
             super();
         }
 
-        showMessage(): void {
-            this.delay(() => alert("Hello"), 2000);
+        logIn() {
+            this.facebookService.logIn()
+                .then((authResponse: any) => {
+                    return this.facebookService.getUserInfo(authResponse);
+                })
+                .then((userInfo: any) => {
+                    console.log(userInfo);
+                    this.isLogIn = true;
+                })
+                .catch((response: any) => {
+                    console.log(response);
+                    alert("Error, please reload page and try again");
+                })
+                .finally(() => {
+                    console.log("finally");
+                });
         }
 
     }
 
     angular.module("facebookConnect")
-        .controller("facebookLogInController", ["$http", FacebookLogInController]);
+        .controller("facebookLogInController", ["facebookService", FacebookLogInController]);
 
 }

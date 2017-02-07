@@ -125,8 +125,9 @@
   <ItemGroup>
     <Content Include="Scripts\FacebookConnect.js" />
     <Content Include="Scripts\facebookLogInController.js" />
-    <Content Include="Scripts\FacebookService.js" />
+    <Content Include="Scripts\facebookService.js" />
     <Content Include="Scripts\sprintf.js" />
+    <Content Include="Styles\facebookConnectStyle.css" />
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -151,7 +152,7 @@
     <Compile Include="Routes.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\Facebook.Connect.cshtml" />
+    <Content Include="Views\FacebookSdk.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Facebook.Settings.cshtml" />
@@ -180,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="Views\Parts\Facebook.Connect.cshtml" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -189,8 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\facebookConnect.ts" />
-    <TypeScriptCompile Include="Scripts\FacebookService.ts" />
-    <TypeScriptCompile Include="Scripts\TestController.ts" />
+    <TypeScriptCompile Include="Scripts\facebookService.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-animate.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-component-router.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-cookies.d.ts" />

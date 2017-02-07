@@ -1,12 +1,15 @@
 ﻿<script type="text/javascript">
+
+    Setting = {};
+    Setting.facebookAppId = 958934724183715;
+
     window.fbAsyncInit = function () {
         FB.init({
-            appId: window.facebookAppId,//test
+            appId: Setting.facebookAppId,//test
             cookie: true,  // enable cookies to allow the server to access the session
             xfbml: true,  // parse social plugins on this page
             version: 'v2.5'
         });
-
         // Additional initialization code here
         $(document).triggerHandler('fbLoaded', ["Facebook SDK loaded"]);
     };

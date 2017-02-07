@@ -2,8 +2,6 @@ var App;
 (function (App) {
     var Services;
     (function (Services) {
-        var FB;
-        var Setting;
         var FacebookService = (function () {
             function FacebookService($q, $http, $document) {
                 this.$q = $q;
@@ -12,10 +10,10 @@ var App;
             }
             FacebookService.prototype.logIn = function () {
                 var deferred = this.$q.defer();
-                FB.logIn(function (response) {
+                FB.login(function (response) {
                     try {
                         if (response.status === 'connected') {
-                            deferred.resolve(response);
+                            deferred.resolve(response.authResponse);
                         }
                         else if (response.status === 'not_authorized') {
                             deferred.reject(response);
@@ -55,18 +53,18 @@ var App;
                 }, forceGetLogInStatus);
                 return deferred.promise;
             };
-            FacebookService.prototype.getUserInfo = function (user) {
+            FacebookService.prototype.getUserInfo = function (authResponse) {
+                console.log(authResponse);
                 var deferred = this.$q.defer();
-                FB.api('/me?fields=picture.width(540).height(540),id,first_name,email', function (response) {
-                    if (user.facebookAppScopeUserId === response.id) {
-                        user.profileUrl = response.picture.data.url;
-                        user.name = response.first_name;
-                        user.email = response.email;
-                        deferred.resolve({ data: user });
-                    }
-                    else {
-                        deferred.reject("error getUserInfo");
-                    }
+                var graphApiUrl = sprintf('/%s?fields=picture.width(540).height(540),id,first_name,email', authResponse.userID);
+                FB.api(graphApiUrl, function (response) {
+                    var userInfo = {};
+                    userInfo.facebookAppScopeUserId = response.id;
+                    userInfo.facebookToken = authResponse.accessToken;
+                    userInfo.profileUrl = response.picture.data.url;
+                    userInfo.name = response.first_name;
+                    userInfo.email = response.email;
+                    deferred.resolve(userInfo);
                 });
                 return deferred.promise;
             };
@@ -209,5 +207,8 @@ var App;
             };
             return FacebookService;
         }());
+        Services.FacebookService = FacebookService;
+        angular.module("facebookConnect")
+            .service("facebookService", ["$q", "$http", "$document", FacebookService]);
     })(Services = App.Services || (App.Services = {}));
 })(App || (App = {}));
