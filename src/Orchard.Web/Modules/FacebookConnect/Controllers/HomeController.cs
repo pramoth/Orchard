@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Facebook.Web.Mvc;
 using Orchard;
 using Facebook;
 using FacebookConnect.Models;
 using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Users.Models;
-using Authorizer = Facebook.Web.Authorizer;
 
 namespace FacebookConnect.Controllers
 {

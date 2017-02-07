@@ -1,43 +1,31 @@
 ﻿@using System.Web.Mvc;
 @{
     Script.Require("jQuery").AtHead();
+    Script.Include("sprintf.js").AtHead();
     Script.Require("AngularJs").AtHead();
+    Script.Include("facebookConnect.js").AtHead();//with name and path
+    Script.Include("facebookLogInController.js").AtHead();//with name and path
+
+    WorkContext.Layout.Head.Add(New.FacebookSdk(), "1");
 }
 
-@if (!Model.IsConnected)
-{
-<div id='fb-root'></div>
 
-<script>
-    var graphApiInitialized = false;
-    window.fbAsyncInit = function () {
-        FB.init({
-            appId: '@(Model.Settings.AppId)',
-            status: true,
-            cookie: true,
-            xfbml: true
-        });
-        graphApiInitialized = true;
-    };
-    (function () {
-        var e = document.createElement('script');
-        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
-        e.async = true;
-        document.getElementById('fb-root').appendChild(e);
-    } ());
+<div ng-app="facebookConnect">
+    <div ng-controller="facebookLogInController as vm">
 
-    function redir() {
-        window.location = '@(Model.RedirectUrl)';
-    }
-</script>
-<fb:login-button onlogin="redir()"  perms="@(Model.Settings.Permissions)">Login using your Facebook</fb:login-button>
-}
+        <a  ng-if="!vm.isLogIn" href="">connect with facebook</a>
 
-@if (Request.IsAuthenticated)
-{
-   @* @T("Connected with Facebook, fb_<strong>{0}</strong>!", WorkContext.CurrentUser.UserName)*@
-}
-else
-{ 
-@*    <span class="login">@T("*If you don't have an account here yet, you'd be redirected to registration form.")</span>*@
-}
+        <a ng-if="vm.isLogIn" href="">profile</a>
+
+    </div>
+</div>
+
+
+@*@if (Request.IsAuthenticated)*@
+@*{*@
+@*   $1$ @T("Connected with Facebook, fb_<strong>{0}</strong>!", WorkContext.CurrentUser.UserName)#1#*@
+@*}*@
+@*else*@
+@*{ *@
+@*$1$    <span class="login">@T("*If you don't have an account here yet, you'd be redirected to registration form.")</span>#1#*@
+@*}*@
