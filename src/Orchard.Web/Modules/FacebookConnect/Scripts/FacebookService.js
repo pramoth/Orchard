@@ -8,6 +8,9 @@ var App;
                 this.$http = $http;
                 this.$document = $document;
             }
+            FacebookService.prototype.getAntiForgeryToken = function () {
+                return $("[name='__RequestVerificationToken']").val();
+            };
             FacebookService.prototype.logIn = function () {
                 var deferred = this.$q.defer();
                 FB.login(function (response) {
@@ -60,11 +63,35 @@ var App;
                 FB.api(graphApiUrl, function (response) {
                     var userInfo = {};
                     userInfo.facebookAppScopeUserId = response.id;
-                    userInfo.facebookToken = authResponse.accessToken;
+                    userInfo.facebookAccessToken = authResponse.accessToken;
                     userInfo.profileUrl = response.picture.data.url;
                     userInfo.name = response.first_name;
                     userInfo.email = response.email;
                     deferred.resolve(userInfo);
+                });
+                return deferred.promise;
+            };
+            FacebookService.prototype.connect = function (user) {
+                var deferred = this.$q.defer();
+                var url = sprintf("/FacebookConnect/Facebook/Connect/");
+                var method = "POST";
+                var req = {
+                    method: method,
+                    url: url,
+                    headers: {
+                        'Content-Type': "application/json",
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        '__RequestVerificationToken': this.getAntiForgeryToken()
+                    },
+                    data: {
+                        facebookAccessToken: user.facebookAccessToken,
+                    }
+                };
+                this.$http(req).then(function (response) {
+                    deferred.resolve({});
+                }).catch(function (response) {
+                    deferred.reject(response);
                 });
                 return deferred.promise;
             };
@@ -85,29 +112,6 @@ var App;
                     .then(function (response) {
                     var data = { existingUser: response.data.existingUser };
                     deferred.resolve({ data: data });
-                }).catch(function (response) {
-                    deferred.reject(response);
-                });
-                return deferred.promise;
-            };
-            FacebookService.prototype.logInWithNewFacebookToken = function (user) {
-                var deferred = this.$q.defer();
-                var url = sprintf("%s/users/login/%s", Setting.apiEndpoint, user.facebookAppScopeUserId);
-                var method = "PUT";
-                var req = {
-                    method: method,
-                    url: url,
-                    headers: {
-                        'Content-Type': "application/json",
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
-                    },
-                    data: {
-                        facebookAccessToken: user.facebookAccessToken
-                    }
-                };
-                this.$http(req).then(function (response) {
-                    deferred.resolve({ data: { apiToken: response.data.apiToken } });
                 }).catch(function (response) {
                     deferred.reject(response);
                 });

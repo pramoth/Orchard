@@ -20,7 +20,7 @@ namespace FacebookConnect {
                         "FacebookConnect",
                         new RouteValueDictionary {
                             {"area", "FacebookConnect"},
-                            {"controller", "Home"},
+                            {"controller", "Facebook"},
                             {"action", "Connect"}
                         },
                         new RouteValueDictionary(),
@@ -34,7 +34,7 @@ namespace FacebookConnect {
                         "FacebookConnect/{action}",
                         new RouteValueDictionary {
                             {"area", "FacebookConnect"},
-                            {"controller", "Home"},
+                            {"controller", "Facebook"},
                             {"action", "Connect"}
                         },
                         new RouteValueDictionary(),

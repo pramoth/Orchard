@@ -11,38 +11,36 @@ using Orchard.Users.Models;
 namespace FacebookConnect.Controllers
 {
     [HandleError]
-    public class HomeController : Controller
+    public class FacebookController : Controller
     {
         private readonly IOrchardServices _services;
         private readonly IAuthenticationService _auth;
         private readonly IMembershipService _membershipService;
 
-        public HomeController(IOrchardServices services, IAuthenticationService auth, IMembershipService membershipService)
+        public FacebookController(IOrchardServices services, IAuthenticationService auth, IMembershipService membershipService)
         {
             _services = services;
             _auth = auth;
             _membershipService = membershipService;
         }
 
-        public ActionResult Connect()
+        [HttpPost]
+        public ActionResult Connect(string facebookAccessToken)
         {
             // Acquire Facebook settings
             var settings = _services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
 
-            ActionResult result = Redirect("~/");
+            var client = new FacebookClient(facebookAccessToken);
 
-            var client = new FacebookClient("");
-
-            result = Redirect("~/");
-            var u = _auth.GetAuthenticatedUser();
 
             dynamic fbUser = client.Get("me");
-            string mail = (string)fbUser.email;
+            var email = (string)fbUser.email;
 
             // If already logged in update the account info
-            if (u != null)
+            var user = _auth.GetAuthenticatedUser();
+            if (user != null)
             {
-                var current = u.As<FacebookUserPart>();
+                var current = user.As<FacebookUserPart>();
                 if (string.IsNullOrWhiteSpace(current.UserId))
                 {
                     //fb id current.UserId = 
@@ -51,10 +49,8 @@ namespace FacebookConnect.Controllers
             // If not logged in check if exists in db and log on or redirect to register screen
             else
             {
-                var user = _services
-                    .ContentManager
-                    .Query<UserPart, UserPartRecord>()
-                    .Where<UserPartRecord>(x => x.Email == mail).List<IUser>().SingleOrDefault();
+                user = _services.ContentManager.Query<UserPart, UserPartRecord>()
+                   .Where<UserPartRecord>(x => x.Email == email).List<IUser>().SingleOrDefault();
 
                 if (user == null)
                 {
@@ -68,8 +64,10 @@ namespace FacebookConnect.Controllers
                 _auth.SignIn(user, true);
             }
 
+            ActionResult result = Redirect("~/");
             return result;
         }
+
         public ActionResult Connected()
         {
             //            // Acquire Facebook settings

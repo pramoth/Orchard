@@ -135,7 +135,7 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\FacebookController.cs" />
     <Compile Include="Drivers\FacebookConnectPartDriver.cs" />
     <Compile Include="Drivers\FacebookSettingsPartDriver.cs" />
     <Compile Include="Handlers\FacebookUserPartHandler.cs" />

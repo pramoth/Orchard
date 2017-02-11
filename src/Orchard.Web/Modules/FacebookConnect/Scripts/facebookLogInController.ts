@@ -38,6 +38,7 @@
                 .then((userInfo: any) => {
                     console.log(userInfo);
                     this.isLogIn = true;
+                    return this.facebookService.connect(userInfo);
                 })
                 .catch((response: any) => {
                     console.log(response);

@@ -19,8 +19,13 @@ module App.Services {
 
     declare var FB: IFb;
     declare var Setting: ISetting;
+    declare var antiForgeryToken: string;
 
     export class FacebookService {
+
+        private getAntiForgeryToken() {
+            return $("[name='__RequestVerificationToken']").val();
+        }
 
         constructor(
             private $q: ng.IQService,
@@ -91,18 +96,46 @@ module App.Services {
         }
 
 
-        getUserInfo(authResponse:any):ng.IPromise<any> {
+        getUserInfo(authResponse: any): ng.IPromise<any> {
             console.log(authResponse);
             var deferred = this.$q.defer();
             var graphApiUrl = sprintf('/%s?fields=picture.width(540).height(540),id,first_name,email', authResponse.userID);
             FB.api(graphApiUrl, (response: any) => {
-                var userInfo:any = {};
+                var userInfo: any = {};
                 userInfo.facebookAppScopeUserId = response.id;
-                userInfo.facebookToken = authResponse.accessToken;
+                userInfo.facebookAccessToken = authResponse.accessToken;
                 userInfo.profileUrl = response.picture.data.url;
                 userInfo.name = response.first_name;
                 userInfo.email = response.email;
                 deferred.resolve(userInfo);
+            });
+
+            return deferred.promise;
+        }
+
+        connect(user: any) {
+            var deferred = this.$q.defer();
+            var url = sprintf("/FacebookConnect/Facebook/Connect/");
+
+            var method = "POST";
+            var req = {
+                method: method,
+                url: url,
+                headers: {
+                    'Content-Type': "application/json",
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    '__RequestVerificationToken':this.getAntiForgeryToken()
+                },
+                data: {
+                    facebookAccessToken: user.facebookAccessToken,
+                }
+            };
+
+            this.$http(req).then((response: any) => {
+                deferred.resolve({});
+            }).catch((response: any) => {
+                deferred.reject(response);
             });
 
             return deferred.promise;
@@ -137,34 +170,6 @@ module App.Services {
         }
 
 
-        logInWithNewFacebookToken(user: any) {
-            var deferred = this.$q.defer();
-            var url = sprintf("%s/users/login/%s",
-                Setting.apiEndpoint,
-                user.facebookAppScopeUserId);
-
-            var method = "PUT";
-            var req = {
-                method: method,
-                url: url,
-                headers: {
-                    'Content-Type': "application/json",
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                },
-                data: {
-                    facebookAccessToken: user.facebookAccessToken
-                }
-            };
-
-            this.$http(req).then((response: any) => {
-                deferred.resolve({ data: { apiToken: response.data.apiToken } });
-            }).catch((response: any) => {
-                deferred.reject(response);
-            });
-
-            return deferred.promise;
-        }
 
         isExistingUserWithEmail(user: any) {
 

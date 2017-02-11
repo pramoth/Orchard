@@ -21,6 +21,8 @@
 </head>
 <body>
 @Display(Model.AfterBody)
+
+@Html.AntiForgeryToken()
 @* Layout (template) is in the Body zone @ the default position (nothing, zero, zilch) *@
 @Display(Model.Body)
 @Display(Model.Tail)
