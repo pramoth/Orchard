@@ -37,8 +37,11 @@
                 })
                 .then((userInfo: any) => {
                     console.log(userInfo);
-                    this.isLogIn = true;
                     return this.facebookService.connect(userInfo);
+                })
+                .then((response: any) => {
+                    this.isLogIn = true;
+                    this.redirect("/");
                 })
                 .catch((response: any) => {
                     console.log(response);

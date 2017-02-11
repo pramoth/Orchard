@@ -35,11 +35,10 @@ var App;
         var FacebookLogInController = (function (_super) {
             __extends(FacebookLogInController, _super);
             function FacebookLogInController(facebookService) {
-                var _this = _super.call(this) || this;
-                _this.facebookService = facebookService;
-                _this.userName = "aaron";
-                _this.isLogIn = false;
-                return _this;
+                _super.call(this);
+                this.facebookService = facebookService;
+                this.userName = "aaron";
+                this.isLogIn = false;
             }
             FacebookLogInController.prototype.logIn = function () {
                 var _this = this;
@@ -49,8 +48,11 @@ var App;
                 })
                     .then(function (userInfo) {
                     console.log(userInfo);
-                    _this.isLogIn = true;
                     return _this.facebookService.connect(userInfo);
+                })
+                    .then(function (response) {
+                    _this.isLogIn = true;
+                    _this.redirect("/");
                 })
                     .catch(function (response) {
                     console.log(response);

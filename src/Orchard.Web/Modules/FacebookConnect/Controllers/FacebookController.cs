@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using Orchard;
 using Facebook;
@@ -40,28 +41,38 @@ namespace FacebookConnect.Controllers
             var user = _auth.GetAuthenticatedUser();
             if (user != null)
             {
-                var current = user.As<FacebookUserPart>();
-                if (string.IsNullOrWhiteSpace(current.UserId))
+                var facebookUser = user.As<FacebookUserPart>();
+                if (string.IsNullOrWhiteSpace(facebookUser.UserId))
                 {
-                    //fb id current.UserId = 
+                    //update user facebook id
+                    facebookUser.UserId = user.Id.ToString();
                 }
             }
             // If not logged in check if exists in db and log on or redirect to register screen
             else
             {
                 user = _services.ContentManager.Query<UserPart, UserPartRecord>()
-                   .Where<UserPartRecord>(x => x.Email == email).List<IUser>().SingleOrDefault();
+                   .Where<UserPartRecord>(x => x.Email == email)
+                   .List<IUser>()
+                   .SingleOrDefault();
 
                 if (user == null)
                 {
                     // Create new user - redirect to form - there is no such binding between FB user Id and any Orchard user
                     //result = RedirectToAction("Register", "Account", new { Area = "Orchard.Users" });
 
-                    user = _membershipService.CreateUser(new CreateUserParams((string)fbUser.name, "SomeP@ssw00rd", (string)fbUser.email, "", "H&I^T^&***Y^", true
-                                                      ));
+                    var userParam = new CreateUserParams(
+                        (string)fbUser.name,
+                        GeneratePassword(8),
+                        (string)fbUser.email,
+                        null, null, true);
+
+                    user = _membershipService.CreateUser(userParam);
+                    var facebookUser = user.As<FacebookUserPart>();
+                    facebookUser.UserId = user.Id.ToString();
                 }
 
-                _auth.SignIn(user, true);
+                _auth.SignIn(user, createPersistentCookie: true);
             }
 
             ActionResult result = Redirect("~/");
@@ -81,5 +92,25 @@ namespace FacebookConnect.Controllers
             //            }
             return Redirect("~/");
         }
+
+        public static string GeneratePassword(int resetPasswordLength)
+        {
+            // Create an array of characters to user for password reset.
+            // Exclude confusing or ambiguous characters such as 1 0 l o i
+            var characters = new[] { "2", "3", "4", "5", "6", "7", "8",
+                "9", "a", "b", "c", "d", "e", "f", "g", "h", "j", "k", "m", "n",
+                "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+
+            var newPassword = new StringBuilder();
+            var rnd = new Random();
+
+            for (var index = 0; index < resetPasswordLength; index++)
+            {
+                newPassword.Append(characters[rnd.Next(characters.Length)]);
+            }
+            return newPassword.ToString();
+        }
+
+
     }
 }
