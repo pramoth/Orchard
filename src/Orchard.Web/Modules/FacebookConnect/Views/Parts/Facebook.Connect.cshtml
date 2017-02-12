@@ -11,16 +11,25 @@
     Script.Include("facebookLogInController.js").AtHead();//with name and path
     Script.Include("facebookService.js").AtHead();//with name and path
 
-    WorkContext.Layout.Head.Add(New.FacebookSdk(), "1");
+    WorkContext.Layout.AfterBody.Add(New.FacebookSdk(), "1");
 }
 
-<div ng-app="facebookConnect">
-    <div ng-controller="facebookLogInController as vm">
-        <a ng-class="!vm.isLogIn? 'show':'hidden'" ng-click="vm.logIn()" href="">connect with facebook</a>
-        <a ng-class="vm.isLogIn? 'show':'hidden'" href="">profile</a>
-    </div>
-</div>
 
+@if (Request.IsAuthenticated)
+{
+    <h1>@T("Hello {0}", WorkContext.CurrentUser.UserName)</h1>
+}
+else
+{
+    <div ng-app="facebookConnect">
+        <div ng-controller="facebookLogInController as vm">
+            <a ng-click="vm.logIn()" href="">connect with facebook</a>
+            @*<a ng-class="!vm.isLogIn? 'show':'hidden'" ng-click="vm.logIn()" href="">connect with facebook</a>
+            <a ng-class="vm.isLogIn? 'show':'hidden'" href="">profile</a>*@
+
+        </div>
+    </div>
+}
 
 @*@if (Request.IsAuthenticated)*@
 @*{*@

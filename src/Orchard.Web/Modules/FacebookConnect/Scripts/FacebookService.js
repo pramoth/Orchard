@@ -16,7 +16,7 @@ var App;
                 FB.login(function (response) {
                     try {
                         if (response.status === 'connected') {
-                            deferred.resolve(response.authResponse);
+                            deferred.resolve(response);
                         }
                         else if (response.status === 'not_authorized') {
                             deferred.reject(response);
@@ -36,19 +36,8 @@ var App;
                 var forceGetLogInStatus = true;
                 FB.getLoginStatus(function (response) {
                     try {
-                        if (response.status === 'connected') {
-                            var user = {
-                                facebookAppScopeUserId: response.authResponse.userID,
-                                facebookAccessToken: response.authResponse.accessToken
-                            };
-                            deferred.resolve({ data: user });
-                        }
-                        else if (response.status === 'not_authorized') {
-                            deferred.reject("The person is logged into Facebook, but not your app");
-                        }
-                        else {
-                            deferred.reject("The person is not logged into Facebook, so we're not sure if");
-                        }
+                        console.log(response);
+                        deferred.resolve(response);
                     }
                     catch (ex) {
                         deferred.reject(ex);
@@ -56,17 +45,18 @@ var App;
                 }, forceGetLogInStatus);
                 return deferred.promise;
             };
-            FacebookService.prototype.getUserInfo = function (authResponse) {
+            FacebookService.prototype.getUserInfo = function (response) {
+                var authResponse = response.authResponse;
                 console.log(authResponse);
                 var deferred = this.$q.defer();
                 var graphApiUrl = sprintf('/%s?fields=picture.width(540).height(540),id,first_name,email', authResponse.userID);
-                FB.api(graphApiUrl, function (response) {
+                FB.api(graphApiUrl, function (queryResponse) {
                     var userInfo = {};
-                    userInfo.facebookAppScopeUserId = response.id;
                     userInfo.facebookAccessToken = authResponse.accessToken;
-                    userInfo.profileUrl = response.picture.data.url;
-                    userInfo.name = response.first_name;
-                    userInfo.email = response.email;
+                    userInfo.facebookAppScopeUserId = queryResponse.id;
+                    userInfo.profileUrl = queryResponse.picture.data.url;
+                    userInfo.name = queryResponse.first_name;
+                    userInfo.email = queryResponse.email;
                     deferred.resolve(userInfo);
                 });
                 return deferred.promise;

@@ -34,17 +34,26 @@ var App;
         Contorllers.ControllerBase = ControllerBase;
         var FacebookLogInController = (function (_super) {
             __extends(FacebookLogInController, _super);
-            function FacebookLogInController(facebookService) {
+            function FacebookLogInController(facebookService, $q) {
                 _super.call(this);
                 this.facebookService = facebookService;
+                this.$q = $q;
                 this.userName = "aaron";
                 this.isLogIn = false;
             }
             FacebookLogInController.prototype.logIn = function () {
                 var _this = this;
-                this.facebookService.logIn()
-                    .then(function (authResponse) {
-                    return _this.facebookService.getUserInfo(authResponse);
+                this.facebookService.getLogInStatus()
+                    .then(function (response) {
+                    if (response.status === 'connected') {
+                        return _this.$q.resolve(response);
+                    }
+                    else {
+                        return _this.facebookService.logIn();
+                    }
+                })
+                    .then(function (response) {
+                    return _this.facebookService.getUserInfo(response);
                 })
                     .then(function (userInfo) {
                     console.log(userInfo);
@@ -65,6 +74,6 @@ var App;
             return FacebookLogInController;
         }(ControllerBase));
         angular.module("facebookConnect")
-            .controller("facebookLogInController", ["facebookService", FacebookLogInController]);
+            .controller("facebookLogInController", ["facebookService", "$q", FacebookLogInController]);
     })(Contorllers = App.Contorllers || (App.Contorllers = {}));
 })(App || (App = {}));

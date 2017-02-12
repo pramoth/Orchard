@@ -40,8 +40,7 @@ module App.Services {
 
                 try {
                     if (response.status === 'connected') {
-
-                        deferred.resolve(response.authResponse);
+                        deferred.resolve(response);
 
                     } else if (response.status === 'not_authorized') {
                         // The person is logged into Facebook, but not your app.
@@ -72,20 +71,23 @@ module App.Services {
                     // app know the current login status of the person.
                     // Full docs on the response object can be found in the documentation
                     // for FB.getLoginStatus().
-                    if (response.status === 'connected') {
-                        var user = {
-                            facebookAppScopeUserId: response.authResponse.userID,
-                            facebookAccessToken: response.authResponse.accessToken
-                        };
-                        deferred.resolve({ data: user });
-                    } else if (response.status === 'not_authorized') {
-                        // The person is logged into Facebook, but not your app.
-                        deferred.reject("The person is logged into Facebook, but not your app");
-                    } else {
-                        // The person is not logged into Facebook, so we're not sure if
-                        // they are logged into this app or not.
-                        deferred.reject("The person is not logged into Facebook, so we're not sure if");
-                    }
+
+                    //list of response.status 
+                    //'connected', use connected to our app
+
+                    //not_authorized, The person is logged into Facebook, but not your app.
+
+                    //other status
+                    // The person is not logged into Facebook, so we're not sure if
+                    // they are logged into this app or not.
+
+                    //uesful properties that can get from response
+                    //response.authResponse.userID,
+                    //response.authResponse.accessToken
+
+                    console.log(response);
+                    deferred.resolve(response);
+
                 } catch (ex) {
                     deferred.reject(ex);
                 }
@@ -96,17 +98,19 @@ module App.Services {
         }
 
 
-        getUserInfo(authResponse: any): ng.IPromise<any> {
+        getUserInfo(response: any): ng.IPromise<any> {
+            var authResponse = response.authResponse;
             console.log(authResponse);
             var deferred = this.$q.defer();
             var graphApiUrl = sprintf('/%s?fields=picture.width(540).height(540),id,first_name,email', authResponse.userID);
-            FB.api(graphApiUrl, (response: any) => {
+
+            FB.api(graphApiUrl, (queryResponse: any) => {
                 var userInfo: any = {};
-                userInfo.facebookAppScopeUserId = response.id;
                 userInfo.facebookAccessToken = authResponse.accessToken;
-                userInfo.profileUrl = response.picture.data.url;
-                userInfo.name = response.first_name;
-                userInfo.email = response.email;
+                userInfo.facebookAppScopeUserId = queryResponse.id;
+                userInfo.profileUrl = queryResponse.picture.data.url;
+                userInfo.name = queryResponse.first_name;
+                userInfo.email = queryResponse.email;
                 deferred.resolve(userInfo);
             });
 
@@ -125,7 +129,7 @@ module App.Services {
                     'Content-Type': "application/json",
                     'X-Requested-With': 'XMLHttpRequest',
                     'Accept': 'application/json',
-                    '__RequestVerificationToken':this.getAntiForgeryToken()
+                    '__RequestVerificationToken': this.getAntiForgeryToken()
                 },
                 data: {
                     facebookAccessToken: user.facebookAccessToken,

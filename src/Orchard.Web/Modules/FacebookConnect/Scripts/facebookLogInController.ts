@@ -26,20 +26,33 @@
         userName = "aaron";
         isLogIn = false;
 
-        constructor(private facebookService: Services.FacebookService) {
+        constructor(
+            private facebookService: Services.FacebookService,
+            private $q: ng.IQService) {
             super();
         }
 
         logIn() {
-            this.facebookService.logIn()
-                .then((authResponse: any) => {
-                    return this.facebookService.getUserInfo(authResponse);
+
+            this.facebookService.getLogInStatus()
+                .then((response: any) => {
+                    if (response.status === 'connected') {
+                        return this.$q.resolve(response);//wrap response as queue promise
+                    } else {
+                        return this.facebookService.logIn();
+                    }
+                })
+                .then((response: any) => {
+                    //always get new user info
+                    return this.facebookService.getUserInfo(response);
                 })
                 .then((userInfo: any) => {
                     console.log(userInfo);
+                    //connect user with server side
                     return this.facebookService.connect(userInfo);
                 })
                 .then((response: any) => {
+                    //action after  logged in successfully
                     this.isLogIn = true;
                     this.redirect("/");
                 })
@@ -55,6 +68,6 @@
     }
 
     angular.module("facebookConnect")
-        .controller("facebookLogInController", ["facebookService", FacebookLogInController]);
+        .controller("facebookLogInController", ["facebookService", "$q", FacebookLogInController]);
 
 }
