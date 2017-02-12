@@ -14,8 +14,7 @@
     WorkContext.Layout.AfterBody.Add(New.FacebookSdk(), "1");
 }
 
-
-@if (Request.IsAuthenticated)
+@if (WorkContext.CurrentUser != null)
 {
     <h1>@T("Hello {0}", WorkContext.CurrentUser.UserName)</h1>
 }
@@ -25,11 +24,12 @@ else
         <div ng-controller="facebookLogInController as vm">
             <a ng-click="vm.logIn()" href="">connect with facebook</a>
             @*<a ng-class="!vm.isLogIn? 'show':'hidden'" ng-click="vm.logIn()" href="">connect with facebook</a>
-            <a ng-class="vm.isLogIn? 'show':'hidden'" href="">profile</a>*@
+                <a ng-class="vm.isLogIn? 'show':'hidden'" href="">profile</a>*@
 
         </div>
     </div>
 }
+
 
 @*@if (Request.IsAuthenticated)*@
 @*{*@

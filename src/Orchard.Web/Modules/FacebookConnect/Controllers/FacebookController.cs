@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using Orchard;
 using Facebook;
 using FacebookConnect.Models;
 using Orchard.ContentManagement;
 using Orchard.Security;
+using Orchard.Users.Events;
 using Orchard.Users.Models;
 
 namespace FacebookConnect.Controllers
@@ -17,12 +19,18 @@ namespace FacebookConnect.Controllers
         private readonly IOrchardServices _services;
         private readonly IAuthenticationService _auth;
         private readonly IMembershipService _membershipService;
+        private IUserEventHandler _userEventHandler;
 
-        public FacebookController(IOrchardServices services, IAuthenticationService auth, IMembershipService membershipService)
+        public FacebookController(
+            IOrchardServices services,
+            IAuthenticationService auth,
+            IMembershipService membershipService,
+            IUserEventHandler userEventHandler)
         {
             _services = services;
             _auth = auth;
             _membershipService = membershipService;
+            _userEventHandler = userEventHandler;
         }
 
         [HttpPost]
@@ -68,15 +76,18 @@ namespace FacebookConnect.Controllers
                         null, null, true);
 
                     user = _membershipService.CreateUser(userParam);
-                    var facebookUser = user.As<FacebookUserPart>();
-                    facebookUser.UserId = user.Id.ToString();
                 }
 
+                var facebookUser = user.As<FacebookUserPart>();
+                facebookUser.UserId = user.Id.ToString();
                 _auth.SignIn(user, createPersistentCookie: true);
+
+                //update last log in, to make cookie valid
+                _userEventHandler.LoggedIn(user);
             }
 
-            ActionResult result = Redirect("~/");
-            return result;
+
+            return new JsonResult();
         }
 
         public ActionResult Connected()

@@ -35,11 +35,12 @@ var App;
         var FacebookLogInController = (function (_super) {
             __extends(FacebookLogInController, _super);
             function FacebookLogInController(facebookService, $q) {
-                _super.call(this);
-                this.facebookService = facebookService;
-                this.$q = $q;
-                this.userName = "aaron";
-                this.isLogIn = false;
+                var _this = _super.call(this) || this;
+                _this.facebookService = facebookService;
+                _this.$q = $q;
+                _this.userName = "aaron";
+                _this.isLogIn = false;
+                return _this;
             }
             FacebookLogInController.prototype.logIn = function () {
                 var _this = this;
