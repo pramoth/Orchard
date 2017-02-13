@@ -1,12 +1,16 @@
 ﻿@using System.Web.Mvc;
 @{
-    Style.Require("Bootstrap");
+    //add style sheet
+    Style.Require("Bootstrap").AtHead();
     Style.Include("facebookConnectStyle.css").AtHead();
+    Style.Include("css/test.css").AtHead();
 
+    //add javascript
     Script.Require("jQuery").AtHead();
-    Script.Require("Bootstrap");
-    Script.Include("sprintf.js").AtHead();
+    Script.Require("Bootstrap").AtHead();
     Script.Require("AngularJs").AtHead();
+
+    Script.Include("sprintf.js").AtHead();
     Script.Include("facebookConnect.js").AtHead();//with name and path
     Script.Include("facebookLogInController.js").AtHead();//with name and path
     Script.Include("facebookService.js").AtHead();//with name and path

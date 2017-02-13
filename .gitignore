@@ -192,3 +192,8 @@ src/Orchard.Azure/Orchard.Azure.CloudService/Staging/
 !lib/**/*.*
 */.vs/*
 src/Rebracer.xml
+
+#sass
+.sass-cache
+
+.gitignore.swp
