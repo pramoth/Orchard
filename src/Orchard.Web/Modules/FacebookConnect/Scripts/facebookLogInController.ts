@@ -33,7 +33,6 @@
         }
 
         logIn() {
-
             this.facebookService.getLogInStatus()
                 .then((response: any) => {
                     if (response.status === 'connected') {
@@ -67,6 +66,7 @@
 
     }
 
+    //register controller to module
     angular.module("facebookConnect")
         .controller("facebookLogInController", ["facebookService", "$q", FacebookLogInController]);
 

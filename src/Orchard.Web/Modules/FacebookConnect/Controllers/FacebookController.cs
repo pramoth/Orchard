@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using Orchard;
 using Facebook;
@@ -19,7 +18,7 @@ namespace FacebookConnect.Controllers
         private readonly IOrchardServices _services;
         private readonly IAuthenticationService _auth;
         private readonly IMembershipService _membershipService;
-        private IUserEventHandler _userEventHandler;
+        private readonly IUserEventHandler _userEventHandler;
 
         public FacebookController(
             IOrchardServices services,
@@ -80,7 +79,9 @@ namespace FacebookConnect.Controllers
 
                 var facebookUser = user.As<FacebookUserPart>();
                 facebookUser.UserId = user.Id.ToString();
-                _auth.SignIn(user, createPersistentCookie: true);
+
+                //sign in
+                _auth.SignIn(user, true);
 
                 //update last log in, to make cookie valid
                 _userEventHandler.LoggedIn(user);

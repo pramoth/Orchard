@@ -17,6 +17,7 @@ module App.Services {
         api(url: string, callback: (response: any) => any): void;
     }
 
+    //define global variable
     declare var FB: IFb;
     declare var Setting: ISetting;
     declare var antiForgeryToken: string;
@@ -122,7 +123,7 @@ module App.Services {
             var url = sprintf("/FacebookConnect/Facebook/Connect/");
 
             var method = "POST";
-            var req = {
+            var req: ng.IRequestConfig = {
                 method: method,
                 url: url,
                 headers: {
@@ -149,9 +150,8 @@ module App.Services {
             var deferred = this.$q.defer();
             var url = sprintf("%s/users/existing?facebookId=%s",
                 Setting.apiEndpoint, user.facebookAppScopeUserId);
-            const method = "GET";
-            var req = {
-                method: method,
+            var req:ng.IRequestConfig = {
+                method: "GET",
                 url: url,
                 headers: {
                     'Content-Type': "application/json",
@@ -176,12 +176,10 @@ module App.Services {
 
 
         isExistingUserWithEmail(user: any) {
-
             var deferred = this.$q.defer();
             var url = sprintf("%s/users/existing?email=%s", Setting.apiEndpoint, user.emailFromFacebook);
-            var method = "GET";
-            var req = {
-                method: method,
+            var req:ng.IRequestConfig = {
+                method: "GET",
                 url: url,
                 headers: {
                     'Content-Type': "application/json",
@@ -209,9 +207,9 @@ module App.Services {
 
             var deferred = this.$q.defer();
             var url = sprintf("%s/users/facebook", Setting.apiEndpoint);
-            var method = "PUT";
-            var req = {
-                method: method,
+
+            var req:ng.IRequestConfig = {
+                method: "PUT",
                 url: url,
                 headers: {
                     'Content-Type': "application/json",
@@ -235,9 +233,8 @@ module App.Services {
         registerNewUser(user: any) {
             var deferred = this.$q.defer();
             var url = sprintf("%s/users/facebook", Setting.apiEndpoint);
-            var method = "POST";
-            var req = {
-                method: method,
+            var req:ng.IRequestConfig = {
+                method: "POST",
                 url: url,
                 headers: {
                     'Content-Type': "application/json",

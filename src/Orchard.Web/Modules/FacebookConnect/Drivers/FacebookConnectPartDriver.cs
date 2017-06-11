@@ -31,9 +31,7 @@ namespace FacebookConnect.Drivers
 
             // Building the FB authentication url to redirect unauthorized users to
             var requestUrl = HttpContext.Current.Request.Url;
-            var redirUrl = string.Format("{0}://{1}/FacebookConnect",
-                          requestUrl.Scheme,
-                          requestUrl.Authority);
+            var redirUrl = $"{requestUrl.Scheme}://{requestUrl.Authority}/FacebookConnect";
                 
 
             return ContentShape("Parts_Facebook_Connect",

@@ -88,9 +88,8 @@ var App;
             FacebookService.prototype.isExistingUser = function (user) {
                 var deferred = this.$q.defer();
                 var url = sprintf("%s/users/existing?facebookId=%s", Setting.apiEndpoint, user.facebookAppScopeUserId);
-                var method = "GET";
                 var req = {
-                    method: method,
+                    method: "GET",
                     url: url,
                     headers: {
                         'Content-Type': "application/json",
@@ -110,9 +109,8 @@ var App;
             FacebookService.prototype.isExistingUserWithEmail = function (user) {
                 var deferred = this.$q.defer();
                 var url = sprintf("%s/users/existing?email=%s", Setting.apiEndpoint, user.emailFromFacebook);
-                var method = "GET";
                 var req = {
-                    method: method,
+                    method: "GET",
                     url: url,
                     headers: {
                         'Content-Type': "application/json",
@@ -136,9 +134,8 @@ var App;
             FacebookService.prototype.updateUserWithFacebook = function (user) {
                 var deferred = this.$q.defer();
                 var url = sprintf("%s/users/facebook", Setting.apiEndpoint);
-                var method = "PUT";
                 var req = {
-                    method: method,
+                    method: "PUT",
                     url: url,
                     headers: {
                         'Content-Type': "application/json",
@@ -158,9 +155,8 @@ var App;
             FacebookService.prototype.registerNewUser = function (user) {
                 var deferred = this.$q.defer();
                 var url = sprintf("%s/users/facebook", Setting.apiEndpoint);
-                var method = "POST";
                 var req = {
-                    method: method,
+                    method: "POST",
                     url: url,
                     headers: {
                         'Content-Type': "application/json",
