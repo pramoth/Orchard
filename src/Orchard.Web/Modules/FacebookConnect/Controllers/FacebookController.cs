@@ -15,10 +15,10 @@ namespace FacebookConnect.Controllers
     [HandleError]
     public class FacebookController : Controller
     {
-        private readonly IOrchardServices _services;
-        private readonly IAuthenticationService _auth;
-        private readonly IMembershipService _membershipService;
-        private readonly IUserEventHandler _userEventHandler;
+        private readonly IOrchardServices services;
+        private readonly IAuthenticationService auth;
+        private readonly IMembershipService membershipService;
+        private readonly IUserEventHandler userEventHandler;
 
         public FacebookController(
             IOrchardServices services,
@@ -26,26 +26,27 @@ namespace FacebookConnect.Controllers
             IMembershipService membershipService,
             IUserEventHandler userEventHandler)
         {
-            _services = services;
-            _auth = auth;
-            _membershipService = membershipService;
-            _userEventHandler = userEventHandler;
+            this.services = services;
+            this.auth = auth;
+            this.membershipService = membershipService;
+            this.userEventHandler = userEventHandler;
         }
 
         [HttpPost]
         public ActionResult Connect(string facebookAccessToken)
         {
             // Acquire Facebook settings
-            var settings = _services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
+            var settings = services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
 
             var client = new FacebookClient(facebookAccessToken);
 
-
-            dynamic fbUser = client.Get("me");
+            //https://developers.facebook.com/tools/explorer/?method=GET&path=me%3Ffields%3Dpicture.width(200).height(200)%2Cemail&version=v2.9
+            dynamic fbUser = client.Get("me?fields=picture.width(200).height(200),email");
             var email = (string)fbUser.email;
+            var imageUrl = fbUser.picture.data.url;
 
             // If already logged in update the account info
-            var user = _auth.GetAuthenticatedUser();
+            var user = auth.GetAuthenticatedUser();
             if (user != null)
             {
                 var facebookUser = user.As<FacebookUserPart>();
@@ -58,7 +59,7 @@ namespace FacebookConnect.Controllers
             // If not logged in check if exists in db and log on or redirect to register screen
             else
             {
-                user = _services.ContentManager.Query<UserPart, UserPartRecord>()
+                user = services.ContentManager.Query<UserPart, UserPartRecord>()
                    .Where<UserPartRecord>(x => x.Email == email)
                    .List<IUser>()
                    .SingleOrDefault();
@@ -71,20 +72,21 @@ namespace FacebookConnect.Controllers
                     var userParam = new CreateUserParams(
                         (string)fbUser.name,
                         GeneratePassword(8),
-                        (string)fbUser.email,
+                        email,
                         null, null, true);
 
-                    user = _membershipService.CreateUser(userParam);
+                    user = membershipService.CreateUser(userParam);
                 }
 
+                //relationship match with field UserId
                 var facebookUser = user.As<FacebookUserPart>();
                 facebookUser.UserId = user.Id.ToString();
 
                 //sign in
-                _auth.SignIn(user, true);
+                auth.SignIn(user, true);
 
                 //update last log in, to make cookie valid
-                _userEventHandler.LoggedIn(user);
+                userEventHandler.LoggedIn(user);
             }
 
 

@@ -13,19 +13,19 @@ namespace FacebookConnect.Drivers
 {
     public class FacebookConnectPartDriver : ContentPartDriver<FacebookConnectPart>
     {
-        private readonly IOrchardServices _services;
-        private readonly IAuthenticationService _auth;
+        private readonly IOrchardServices services;
+        private readonly IAuthenticationService auth;
 
         public FacebookConnectPartDriver(IOrchardServices services, IAuthenticationService auth) {
-            _services = services;
-            _auth = auth;
+            this.services = services;
+           this. auth = auth;
         }
 
         protected override DriverResult Display(FacebookConnectPart part, string displayType, dynamic shapeHelper)
         {
             // Acquire Facebook settings
-            var settings = _services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
-            var u = _auth.GetAuthenticatedUser();
+            var settings = services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
+            var u = auth.GetAuthenticatedUser();
             var isConnected = u != null && string.IsNullOrWhiteSpace(u.As<FacebookUserPart>().UserId);
             
 

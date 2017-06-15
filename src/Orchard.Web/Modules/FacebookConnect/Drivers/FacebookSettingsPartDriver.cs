@@ -16,40 +16,45 @@ namespace FacebookConnect.Drivers
             IAuthenticationService authenticationService,
             IOrchardServices services)
         {
-            _notifier = notifier;
-            _authorizationService = authorizationService;
-            _authenticationService = authenticationService;
+            this.notifier = notifier;
+            this.authorizationService = authorizationService;
+            this.authenticationService = authenticationService;
+            this.services = services;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
         private const string TemplateName = "Parts/Facebook.Settings";
-        private readonly INotifier _notifier;
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly INotifier notifier;
+        private readonly IAuthorizationService authorizationService;
+        private readonly IAuthenticationService authenticationService;
+        private readonly IOrchardServices services;
 
         protected override DriverResult Editor(FacebookSettingsPart part, dynamic shapeHelper)
         {
-            if (!_authorizationService.TryCheckAccess(Permissions.EditSettings, _authenticationService.GetAuthenticatedUser(), part))
+            if (!authorizationService.TryCheckAccess(Permissions.EditSettings, 
+                authenticationService.GetAuthenticatedUser(), part))
                 return null;
 
             return ContentShape("Parts_Facebook_Settings",
-                    () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
+                    () => shapeHelper
+                    .EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(FacebookSettingsPart part, IUpdateModel updater, dynamic shapeHelper)
         {
-            if (!_authorizationService.TryCheckAccess(Permissions.EditSettings, _authenticationService.GetAuthenticatedUser(), part))
+            if (!authorizationService
+                .TryCheckAccess(Permissions.EditSettings, authenticationService.GetAuthenticatedUser(), part))
                 return null;
 
             if (updater.TryUpdateModel(part, Prefix, null, null))
             {
-                _notifier.Information(T("Facebook Settings Saved"));
+                notifier.Information(T("Facebook Settings Saved"));
             }
             else
             {
-                _notifier.Error(T("Error during facebook settings update!"));
+                notifier.Error(T("Error during facebook settings update!"));
             }
             return Editor(part, shapeHelper);
         }

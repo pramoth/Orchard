@@ -23,7 +23,7 @@
 
     class FacebookLogInController extends ControllerBase {
 
-        userName = "aaron";
+        userName = "";
         isLogIn = false;
 
         constructor(
@@ -68,6 +68,7 @@
 
     //register controller to module
     angular.module("facebookConnect")
-        .controller("facebookLogInController", ["facebookService", "$q", FacebookLogInController]);
+        .controller("facebookLogInController",
+        ["facebookService", "$q", FacebookLogInController]);
 
 }
