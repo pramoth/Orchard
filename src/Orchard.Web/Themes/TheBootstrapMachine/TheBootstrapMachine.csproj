@@ -151,7 +151,6 @@
     <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Menu-main-menu.cshtml" />
     <Content Include="Views\MenuItem.cshtml" />
     <Content Include="Views\Parts.Tags.ShowTags.cshtml" />
     <Content Include="Views\Parts.Title.Summary.cshtml" />
@@ -255,9 +254,6 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Menu.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Assets\bootstrap\responsive-embed.less" />
   </ItemGroup>
   <ItemGroup>
@@ -309,6 +305,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="Views\Parts.MenuWidget.cshtml" />
+    <Content Include="Views\MenuItemLink.cshtml" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
