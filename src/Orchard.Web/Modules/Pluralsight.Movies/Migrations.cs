@@ -58,5 +58,18 @@ namespace Pluralsight.Movies
 
             return 3;
         }
+
+        public int UpdateFrom3() {
+            SchemaBuilder.CreateTable("MoviePartRecord", table =>
+                table.ContentPartRecord()
+                    .Column<string>("IMDB_Id")
+                    .Column<int>("YearReleased")
+                    .Column<string>("Rating",col=>col.WithLength(4)));
+
+            ContentDefinitionManager.AlterTypeDefinition("Movie",
+                builder => builder.WithPart("MoviePart"));
+
+            return 4;
+        }
     }
 }

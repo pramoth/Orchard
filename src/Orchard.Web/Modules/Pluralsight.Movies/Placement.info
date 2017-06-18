@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Placement>
+  <!-- place part name -->
+  <Place Parts_Movie_Edit="Content:10"/> 
+</Placement>

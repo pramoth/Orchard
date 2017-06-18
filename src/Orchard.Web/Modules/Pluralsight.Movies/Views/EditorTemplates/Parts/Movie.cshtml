@@ -1,0 +1,25 @@
+﻿@using Pluralsight.Movies.Models
+@model MoviePart
+@{
+    var ratingSelectListItems = Enum.GetNames(typeof(MPAARating))
+        .Select(r => new SelectListItem()
+        {
+            Text = r,
+            Value = r,
+            Selected = r == Model.Rating.ToString()
+        });
+}
+
+<fieldset>
+
+    <legend>@T("Details")</legend>
+    @Html.LabelFor(m=>m.IMDB_Id, T("IMDB_Id"))
+    @Html.TextBoxFor(m=>m.IMDB_Id)
+
+    @Html.LabelFor(m=>m.YearReleased, T("Year Released"))
+    @Html.TextBoxFor(m=>m.YearReleased)
+
+    @Html.LabelFor(m=>m.Rating, T("MPAA Rating"))
+    @Html.DropDownListFor(m=>m.Rating, ratingSelectListItems)
+
+</fieldset>
