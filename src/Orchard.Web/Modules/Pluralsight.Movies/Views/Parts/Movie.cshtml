@@ -1,0 +1,9 @@
+﻿@using Pluralsight.Movies.Models
+@model dynamic
+@{
+    var moviePart = (MoviePart)Model.MoviePart;
+}
+<div>
+    <p>Released: @moviePart.YearReleased</p>
+    <p>Rating: @moviePart.Rating</p>
+</div>

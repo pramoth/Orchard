@@ -2,4 +2,5 @@
 <Placement>
   <!-- place part name -->
   <Place Parts_Movie_Edit="Content:10"/> 
+  <Place Parts_Movie="Content:5"/> 
 </Placement>
