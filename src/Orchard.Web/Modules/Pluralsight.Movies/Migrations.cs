@@ -71,5 +71,18 @@ namespace Pluralsight.Movies
 
             return 4;
         }
+
+        public int UpdateFrom4() {
+            ContentDefinitionManager.AlterPartDefinition("MoviePart", builder =>
+                builder.WithField("Genre", cfg =>
+                    cfg.OfType("TaxonomyField")
+                        .WithSetting("TaxonomyFieldSettings.Taxonomy", "Genre")
+                        .WithSetting("TaxonomyFieldSettings.LeavesOnly", "false")
+                        .WithSetting("TaxonomyFieldSettings.SingleChoice", "false")
+                        .WithSetting("TaxonomyFieldSettings.Hint", 
+                        "Select many genres as you want.")));
+
+            return 5;
+        }
     }
 }

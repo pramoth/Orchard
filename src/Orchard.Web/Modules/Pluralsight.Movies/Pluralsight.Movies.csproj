@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Drivers\MoviePartDriver.cs" />
+    <Compile Include="Handlers\MovieFeatureEventHandler.cs" />
     <Compile Include="Handlers\MovieHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\MoviePart.cs" />
@@ -126,6 +127,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
       <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Contrib.Taxonomies\Contrib.Taxonomies.csproj">
+      <Project>{2cad7424-bdc0-43cc-9b60-a767ef46cc69}</Project>
+      <Name>Contrib.Taxonomies</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
