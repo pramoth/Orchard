@@ -25,5 +25,15 @@ namespace Pluralsight.Movies.Models
             get { return Record.Rating; }
             set { Record.Rating = value; }
         }
+
+        public IEnumerable<ActorRecord> Cast
+        {
+            get
+            {
+                return Record.MovieActors.ToList()
+                    .Select(c => c.ActorRecord);
+            }
+            
+        } 
     }
 }

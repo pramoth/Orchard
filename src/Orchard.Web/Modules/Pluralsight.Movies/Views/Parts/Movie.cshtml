@@ -1,9 +1,18 @@
 ﻿@using Pluralsight.Movies.Models
 @model dynamic
+
 @{
+    Style.Require("Movies");
     var moviePart = (MoviePart)Model.MoviePart;
 }
-<div>
-    <p>Released: @moviePart.YearReleased</p>
-    <p>Rating: @moviePart.Rating</p>
-</div>
+<p>Released: @moviePart.YearReleased</p>
+<p>Rating: @moviePart.Rating</p>
+
+<h2>Cast</h2>
+<ul>
+    @foreach (var actor in Model.MoviePart.Cast)
+    {
+        string actorName = actor.Name;
+        <li>@Html.ActionLink(actorName, "Details", "Actor", new { area = "Pluralsight.Movies", actorId = actor.Id }, null)</li>
+    }
+</ul>

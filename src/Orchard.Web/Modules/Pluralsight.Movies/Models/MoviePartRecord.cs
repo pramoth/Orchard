@@ -11,5 +11,11 @@ namespace Pluralsight.Movies.Models
         public virtual string IMDB_Id { get; set; }
         public virtual int YearReleased { get; set; }
         public virtual MPAARating Rating { get; set; }
+
+        public MoviePartRecord() {
+            MovieActors = new List<MovieActorRecord>();
+        }
+
+        public virtual IList<MovieActorRecord> MovieActors { get; set; }
     }
 }

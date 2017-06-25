@@ -1,0 +1,16 @@
+﻿@using Orchard.ContentManagement
+@model Pluralsight.Movies.ViewModels.ActorViewModel
+
+<h1>@Model.Name</h1>
+
+<div style="margin-left: 25px;">
+    <h2>Filmography</h2>
+    <ul>
+        @foreach(dynamic movie in Model.Movies) {
+            string title = movie.ContentItem.TitlePart.Title;
+            string year = movie.ContentItem.MoviePart.YearReleased.ToString();
+            string linkText = String.Format("{0} ({1})", title, year);
+            <li>@Html.ItemDisplayLink(linkText, (IContent)movie)</li>
+        }
+    </ul>
+</div>

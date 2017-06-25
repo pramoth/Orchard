@@ -1,0 +1,27 @@
+﻿@model Pluralsight.Movies.ViewModels.ActorsIndexViewModel
+
+@{
+    Layout.Title = T("Actors");
+}
+
+<div class="manage">
+    @Html.ActionLink(T("New Actor").Text, "Create", "ActorsAdmin", new { area = "Pluralsight.Movies" }, new { @class = "button primaryAction" })
+</div>
+<table class="items">
+    <thead>
+        <tr>
+            <th>@T("Name")</th>
+            <th></th>
+        </tr>
+    </thead>
+@foreach(var actor in Model.Actors) {
+    <tr>
+        <td>@actor.Name</td>
+        <td>
+            @Html.ActionLink(T("Edit").Text, "Edit", "ActorsAdmin", new { area = "Pluralsight.Movies", actorId = actor.Id }, null) |
+            @Html.ActionLink(T("Delete").Text, "Delete", "ActorsAdmin", new { area = "Pluralsight.Movies", actorId = actor.Id }, null)
+        </td>
+    </tr>
+}
+</table>
+@Display(Model.Pager)

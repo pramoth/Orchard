@@ -1,6 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Placement>
-  <!-- place part name -->
-  <Place Parts_Movie_Edit="Content:10"/> 
-  <Place Parts_Movie="Content:5"/> 
+  <!-- place part name and zone position -->
+
+  <Place Parts_Common_Metadata="-"/> <!--hide-->
+  <Place Parts_Common_Metadata_Summary="-"/><!--hide-->
+  <Place Parts_Movie_Edit="Content:10"/>
+
+  <Place Parts_Movies_SiteSettings="Content:1"/>
+
+  <Match ContentType="Movie">
+    <Match DisplayType="Detail">
+      <!-- put parts_movie shape template at MovieDetailsLocal zone-->
+      <Place Parts_Movie="MovieDetails"/>
+    </Match>
+    <Match DisplayType="Summary">
+      <Place Parts_Movie="-"/> <!--hide-->
+    </Match>
+  </Match>
 </Placement>
