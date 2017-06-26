@@ -9,14 +9,15 @@ namespace FacebookConnect.Models
 {
     public class FacebookUserPart : ContentPart<FacebookUserPartRecord>
     {
-        public string UserId
+        public int? UserId
         {
             get { return Record.UserId; }
             set { Record.UserId = value; }
         }
     }
 
-    public class FacebookUserPartRecord : ContentPartRecord {
-        public virtual string UserId { get; set; }
+    public class FacebookUserPartRecord : ContentPartRecord
+    {
+        public virtual int? UserId { get; set; }
     }
 }

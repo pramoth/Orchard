@@ -26,8 +26,7 @@ namespace Orchard.Users {
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
-
-            return 4;
+            return 1;
         }
 
         public int UpdateFrom1() {

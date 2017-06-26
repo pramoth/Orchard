@@ -6,6 +6,9 @@ namespace FacebookConnect {
             var manifest = builder.Add();
             //manifest.DefineScript("AngularJs").SetUrl("angular.min.js", "angular.js")
             //    .SetVersion(angularVersion);
+
+
+
         }
     }
 }

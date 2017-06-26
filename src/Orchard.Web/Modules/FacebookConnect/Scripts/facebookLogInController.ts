@@ -23,6 +23,7 @@
 
     class FacebookLogInController extends ControllerBase {
 
+        testa=1;
         userName = "";
         isLogIn = false;
 
@@ -33,6 +34,8 @@
         }
 
         logIn() {
+            console.log("log in called");
+
             this.facebookService.getLogInStatus()
                 .then((response: any) => {
                     if (response.status === 'connected') {

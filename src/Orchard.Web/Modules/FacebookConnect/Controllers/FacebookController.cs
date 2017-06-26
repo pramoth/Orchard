@@ -50,10 +50,10 @@ namespace FacebookConnect.Controllers
             if (user != null)
             {
                 var facebookUser = user.As<FacebookUserPart>();
-                if (string.IsNullOrWhiteSpace(facebookUser.UserId))
+                if (facebookUser.UserId !=null)
                 {
                     //update user facebook id
-                    facebookUser.UserId = user.Id.ToString();
+                    facebookUser.UserId = user.Id;
                 }
             }
             // If not logged in check if exists in db and log on or redirect to register screen
@@ -80,7 +80,7 @@ namespace FacebookConnect.Controllers
 
                 //relationship match with field UserId
                 var facebookUser = user.As<FacebookUserPart>();
-                facebookUser.UserId = user.Id.ToString();
+                facebookUser.UserId = user.Id;
 
                 //sign in
                 auth.SignIn(user, true);

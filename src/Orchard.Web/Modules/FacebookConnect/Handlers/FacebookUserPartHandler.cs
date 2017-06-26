@@ -12,6 +12,7 @@ namespace FacebookConnect.Handlers
     {
         public FacebookUserPartHandler(IRepository<FacebookUserPartRecord> repository)
         {
+            //attach to user
             Filters.Add(new ActivatingFilter<FacebookUserPart>("User"));
             Filters.Add(StorageFilter.For(repository));
         }

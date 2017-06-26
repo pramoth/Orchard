@@ -43,12 +43,14 @@ var App;
                 var _this = _super.call(this) || this;
                 _this.facebookService = facebookService;
                 _this.$q = $q;
+                _this.testa = 1;
                 _this.userName = "";
                 _this.isLogIn = false;
                 return _this;
             }
             FacebookLogInController.prototype.logIn = function () {
                 var _this = this;
+                console.log("log in called");
                 this.facebookService.getLogInStatus()
                     .then(function (response) {
                     if (response.status === 'connected') {

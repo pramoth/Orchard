@@ -6,13 +6,15 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
+using FacebookConnect.Models;
 
 namespace FacebookConnect {
     public class Migrations : DataMigrationImpl {
 
         public int Create() {
 
-            SchemaBuilder.CreateTable("FacebookSettingsPartRecord",
+            //create table for a setting record 
+            SchemaBuilder.CreateTable( nameof(FacebookSettingsPartRecord),
                                       table => table
                                           .ContentPartRecord()
                                           .Column<string>("AppId", c => c.Unlimited())
@@ -20,21 +22,23 @@ namespace FacebookConnect {
                                           .Column<string>("Permissions", c => c.Unlimited())
                 );
 
-            SchemaBuilder.CreateTable("FacebookUserPartRecord",
+            //create a table for FacebookUserPart record
+            SchemaBuilder.CreateTable( nameof(FacebookUserPartRecord),
                                       table => table
                                           .ContentPartRecord()
-                                          .Column<string>("UserId")
+                                          .Column<int>("UserId")
                 );
 
+            ContentDefinitionManager.AlterPartDefinition( nameof(FacebookConnectPart), builder => builder.Attachable());
+
+            //create Widget content type
             ContentDefinitionManager.AlterTypeDefinition("FacebookConnectWidget",
                 cfg => cfg
-                    .WithPart("FacebookConnectPart")
+                    .WithPart(nameof(FacebookConnectPart))
                     .WithPart("CommonPart")
                     .WithPart("WidgetPart")
                     .WithSetting("Stereotype", "Widget")
                 );
-
-            ContentDefinitionManager.AlterPartDefinition("FacebookConnectPart", builder => builder.Attachable());
 
             return 1;
         }

@@ -119,6 +119,14 @@ namespace Pluralsight.Movies
             actorRepository.Create(new ActorRecord() { Name = "Actor 6" });
             return 7;
         }
-        
+
+        public int UpdateFrom7()
+        {
+            SchemaBuilder.CreateTable("MovieSettingsPartRecord", table =>
+                table
+                .ContentPartRecord()//defind Id 
+                .Column<string>("TMDB_APIKey"));
+            return 8;
+        }
     }
 }

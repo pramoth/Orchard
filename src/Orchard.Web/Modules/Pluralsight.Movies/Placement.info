@@ -6,6 +6,7 @@
   <Place Parts_Common_Metadata_Summary="-"/><!--hide-->
   <Place Parts_Movie_Edit="Content:10"/>
 
+  <!--shape type-->
   <Place Parts_Movies_SiteSettings="Content:1"/>
 
   <Match ContentType="Movie">
