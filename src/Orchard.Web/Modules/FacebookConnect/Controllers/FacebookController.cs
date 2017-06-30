@@ -41,7 +41,9 @@ namespace FacebookConnect.Controllers
             var client = new FacebookClient(facebookAccessToken);
 
             //https://developers.facebook.com/tools/explorer/?method=GET&path=me%3Ffields%3Dpicture.width(200).height(200)%2Cemail&version=v2.9
-            dynamic fbUser = client.Get("me?fields=picture.width(200).height(200),email");
+            dynamic fbUser =
+                client.Get("me?fields=picture.width(200).height(200),email,first_name,last_name");
+
             var email = (string)fbUser.email;
             var imageUrl = fbUser.picture.data.url;
 
@@ -50,7 +52,7 @@ namespace FacebookConnect.Controllers
             if (user != null)
             {
                 var facebookUser = user.As<FacebookUserPart>();
-                if (facebookUser.UserId !=null)
+                if (facebookUser.UserId != null)
                 {
                     //update user facebook id
                     facebookUser.UserId = user.Id;
@@ -70,7 +72,7 @@ namespace FacebookConnect.Controllers
                     //result = RedirectToAction("Register", "Account", new { Area = "Orchard.Users" });
 
                     var userParam = new CreateUserParams(
-                        (string)fbUser.name,
+                        (string)fbUser.first_name,
                         GeneratePassword(8),
                         email,
                         null, null, true);
