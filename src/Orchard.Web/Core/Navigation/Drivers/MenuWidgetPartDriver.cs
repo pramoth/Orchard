@@ -152,11 +152,12 @@ namespace Orchard.Core.Navigation.Drivers {
                     menuItems = topLevelItems;
                 }
 
+                //set property to shape model
                 menuShape.MenuName(menuName);
                 menuShape.ContentItem(menu);
 
                 NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
-
+                //set Model.Menu to part template
                 return shapeHelper.Parts_MenuWidget(Menu: menuShape);
             });
         }

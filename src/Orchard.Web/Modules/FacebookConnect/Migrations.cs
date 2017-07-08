@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using FacebookConnect.Models;
 
-namespace FacebookConnect {
+namespace FacebookConnect
+{
     public class Migrations : DataMigrationImpl {
 
         public int Create() {
@@ -29,6 +24,7 @@ namespace FacebookConnect {
                                           .Column<string>("ProfilePictureUrl")
                 );
 
+            //alter User content type to attach FacebookUserPart
             ContentDefinitionManager.AlterTypeDefinition("User",
                 cfg => cfg .WithPart("FacebookUserPart"));
 
