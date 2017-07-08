@@ -23,7 +23,6 @@
 
     class FacebookLogInController extends ControllerBase {
 
-        testa=1;
         userName = "";
         isLogIn = false;
 

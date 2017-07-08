@@ -10,6 +10,5 @@ namespace FacebookConnect.Models
     {
         public virtual string AppId { get; set; }
         public virtual string AppSecret { get; set; }
-        public virtual string Permissions { get; set; }
     }
 }

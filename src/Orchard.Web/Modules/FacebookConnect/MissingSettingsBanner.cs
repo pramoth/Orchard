@@ -25,7 +25,7 @@ namespace FacebookConnect
 
             var facebookSettings = _orchardServices.WorkContext.CurrentSite.As<FacebookSettingsPart>();
 
-            if (facebookSettings == null || string.IsNullOrWhiteSpace(facebookSettings.AppId) || string.IsNullOrWhiteSpace(facebookSettings.AppSecret) || string.IsNullOrWhiteSpace(facebookSettings.Permissions))
+            if (facebookSettings == null || string.IsNullOrWhiteSpace(facebookSettings.AppId) || string.IsNullOrWhiteSpace(facebookSettings.AppSecret))
             {
                 yield return new NotifyEntry { 
                     Message =

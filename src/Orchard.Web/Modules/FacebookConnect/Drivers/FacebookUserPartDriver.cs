@@ -25,11 +25,10 @@ namespace FacebookConnect.Drivers
         {
             // Acquire Facebook settings
             var settings = services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
-            var u = auth.GetAuthenticatedUser();
-            var isConnected = u != null && 
-                string.IsNullOrWhiteSpace(u.As<FacebookUserPart>().UserId.ToString());
+            var user = auth.GetAuthenticatedUser();
+            var facebookUserContent = user.ContentItem.As<FacebookUserPart>();
+            var isConnected = user != null && facebookUserContent !=null;
             
-
             // Building the FB authentication url to redirect unauthorized users to
             var requestUrl = HttpContext.Current.Request.Url;
             var redirUrl = $"{requestUrl.Scheme}://{requestUrl.Authority}/FacebookConnect";

@@ -2,11 +2,21 @@ var App;
 (function (App) {
     var Services;
     (function (Services) {
+        var FbScope = (function () {
+            function FbScope() {
+            }
+            return FbScope;
+        }());
+        Services.FbScope = FbScope;
         var FacebookService = (function () {
             function FacebookService($q, $http, $document) {
                 this.$q = $q;
                 this.$http = $http;
                 this.$document = $document;
+                this.fbScope = {
+                    return_scopes: true,
+                    scope: "email,public_profile"
+                };
             }
             FacebookService.prototype.getAntiForgeryToken = function () {
                 return $("[name='__RequestVerificationToken']").val();
@@ -28,7 +38,7 @@ var App;
                     catch (ex) {
                         deferred.reject(ex);
                     }
-                });
+                }, this.fbScope);
                 return deferred.promise;
             };
             FacebookService.prototype.getLogInStatus = function () {
@@ -36,7 +46,7 @@ var App;
                 var forceGetLogInStatus = true;
                 FB.getLoginStatus(function (response) {
                     try {
-                        console.log(response);
+                        console.log("get log in status \n%o\n", response);
                         deferred.resolve(response);
                     }
                     catch (ex) {
@@ -47,15 +57,17 @@ var App;
             };
             FacebookService.prototype.getUserInfo = function (response) {
                 var authResponse = response.authResponse;
-                console.log(authResponse);
+                var grantedScopes = response.authResponse.grantedScopes;
+                console.log("grantedScopes \n%o\n", grantedScopes);
                 var deferred = this.$q.defer();
-                var graphApiUrl = sprintf('/%s?fields=picture.width(540).height(540),id,first_name,email', authResponse.userID);
+                var graphApiUrl = sprintf('/%s?fields=picture.width(540).height(540),id,first_name,last_name,email', authResponse.userID);
                 FB.api(graphApiUrl, function (queryResponse) {
                     var userInfo = {};
                     userInfo.facebookAccessToken = authResponse.accessToken;
                     userInfo.facebookAppScopeUserId = queryResponse.id;
-                    userInfo.profileUrl = queryResponse.picture.data.url;
-                    userInfo.name = queryResponse.first_name;
+                    userInfo.profilePictureUrl = queryResponse.picture.data.url;
+                    userInfo.firstName = queryResponse.first_name;
+                    userInfo.lastName = queryResponse.last_name;
                     userInfo.email = queryResponse.email;
                     deferred.resolve(userInfo);
                 });
@@ -63,7 +75,7 @@ var App;
             };
             FacebookService.prototype.connect = function (user) {
                 var deferred = this.$q.defer();
-                var url = sprintf("/FacebookConnect/Facebook/Connect/");
+                var url = sprintf("/facebook/connect/");
                 var method = "POST";
                 var req = {
                     method: method,
@@ -74,9 +86,7 @@ var App;
                         'Accept': 'application/json',
                         '__RequestVerificationToken': this.getAntiForgeryToken()
                     },
-                    data: {
-                        facebookAccessToken: user.facebookAccessToken,
-                    }
+                    data: user
                 };
                 this.$http(req).then(function (response) {
                     deferred.resolve({});

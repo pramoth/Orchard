@@ -18,27 +18,19 @@ namespace FacebookConnect {
                                       table => table
                                           .ContentPartRecord()
                                           .Column<string>("AppId", c => c.Unlimited())
-                                          .Column<string>("AppSecret", c => c.Unlimited())
-                                          .Column<string>("Permissions", c => c.Unlimited())
-                );
+                                          .Column<string>("AppSecret", c => c.Unlimited()));
 
             //create a table for FacebookUserPart record
             SchemaBuilder.CreateTable( nameof(FacebookUserPartRecord),
                                       table => table
                                           .ContentPartRecord()
-                                          .Column<int>("UserId")
+                                          .Column<string>("FirstName")
+                                          .Column<string>("LastName")
+                                          .Column<string>("ProfilePictureUrl")
                 );
 
-            ContentDefinitionManager.AlterPartDefinition( nameof(FacebookConnectPart), builder => builder.Attachable());
-
-            //create Widget content type
-            ContentDefinitionManager.AlterTypeDefinition("FacebookConnectWidget",
-                cfg => cfg
-                    .WithPart(nameof(FacebookConnectPart))
-                    .WithPart("CommonPart")
-                    .WithPart("WidgetPart")
-                    .WithSetting("Stereotype", "Widget")
-                );
+            ContentDefinitionManager.AlterTypeDefinition("User",
+                cfg => cfg .WithPart("FacebookUserPart"));
 
             return 1;
         }

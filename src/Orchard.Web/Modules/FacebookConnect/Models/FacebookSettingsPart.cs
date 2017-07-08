@@ -19,11 +19,5 @@ namespace FacebookConnect.Models
             get { return Record.AppSecret; }
             set { Record.AppSecret = value; }
         }
-
-        public string Permissions
-        {
-            get { return Record.Permissions; }
-            set { Record.Permissions = value; }
-        }
     }
 }

@@ -3,21 +3,27 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Mvc.Routes;
 
-namespace FacebookConnect {
-    public class Routes : IRouteProvider {
+namespace FacebookConnect
+{
+    public class Routes : IRouteProvider
+    {
 
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var routeDescriptor in GetRoutes()) {
+        public void GetRoutes(ICollection<RouteDescriptor> routes)
+        {
+            foreach (var routeDescriptor in GetRoutes())
+            {
                 routes.Add(routeDescriptor);
             }
         }
 
-        public IEnumerable<RouteDescriptor> GetRoutes() {
+        public IEnumerable<RouteDescriptor> GetRoutes()
+        {
             return new[] {
                 new RouteDescriptor {
-                    Priority = 9,
+
+                    Priority = 100,
                     Route = new Route(
-                        "FacebookConnect",
+                        "Users/Account/LogOn",
                         new RouteValueDictionary {
                             {"area", "FacebookConnect"},
                             {"controller", "Facebook"},
@@ -31,7 +37,7 @@ namespace FacebookConnect {
                 }, new RouteDescriptor {
                     Priority = 9,
                     Route = new Route(
-                        "FacebookConnect/{action}",
+                        "facebook/connect",
                         new RouteValueDictionary {
                             {"area", "FacebookConnect"},
                             {"controller", "Facebook"},

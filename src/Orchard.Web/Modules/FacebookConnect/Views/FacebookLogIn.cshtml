@@ -24,20 +24,7 @@ else
 {
     <div ng-app="facebookConnect">
         <div ng-controller="facebookLogInController as vm">
-            <a ng-click="vm.logIn()" href="">connect with facebook</a>
-            @*<a ng-class="!vm.isLogIn? 'show':'hidden'" ng-click="vm.logIn()" href="">connect with facebook</a>
-                <a ng-class="vm.isLogIn? 'show':'hidden'" href="">profile</a>*@
-
+            <a ng-click="vm.logIn()" href="">Log In with facebook</a>
         </div>
     </div>
 }
-
-
-@*@if (Request.IsAuthenticated)*@
-@*{*@
-@*   $1$ @T("Connected with Facebook, fb_<strong>{0}</strong>!", WorkContext.CurrentUser.UserName)#1#*@
-@*}*@
-@*else*@
-@*{ *@
-@*$1$    <span class="login">@T("*If you don't have an account here yet, you'd be redirected to registration form.")</span>#1#*@
-@*}*@

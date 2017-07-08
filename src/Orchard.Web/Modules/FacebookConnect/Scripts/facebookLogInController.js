@@ -43,7 +43,6 @@ var App;
                 var _this = _super.call(this) || this;
                 _this.facebookService = facebookService;
                 _this.$q = $q;
-                _this.testa = 1;
                 _this.userName = "";
                 _this.isLogIn = false;
                 return _this;

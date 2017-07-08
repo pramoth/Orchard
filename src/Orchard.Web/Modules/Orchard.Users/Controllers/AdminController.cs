@@ -219,7 +219,6 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<UserPart>(id);
-
             if (user == null)
                 return HttpNotFound();
 

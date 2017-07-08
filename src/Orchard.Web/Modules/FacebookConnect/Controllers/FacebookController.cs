@@ -9,16 +9,25 @@ using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Users.Events;
 using Orchard.Users.Models;
+using Orchard.Mvc.Extensions;
+using Orchard.Logging;
+using Orchard.Localization;
+using Orchard.Mvc;
+using Orchard.Themes;
 
 namespace FacebookConnect.Controllers
 {
-    [HandleError]
+    [HandleError, Themed]
     public class FacebookController : Controller
     {
         private readonly IOrchardServices services;
         private readonly IAuthenticationService auth;
         private readonly IMembershipService membershipService;
         private readonly IUserEventHandler userEventHandler;
+
+        //property injection
+        public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         public FacebookController(
             IOrchardServices services,
@@ -30,18 +39,35 @@ namespace FacebookConnect.Controllers
             this.auth = auth;
             this.membershipService = membershipService;
             this.userEventHandler = userEventHandler;
+
+            Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
+
+
+        [AlwaysAccessible]
+        public ActionResult Connect(string returnUrl)
+        {
+            if (auth.GetAuthenticatedUser() != null)
+                return this.RedirectLocal(returnUrl);
+
+            var shape = services.New.FacebookLogIn().Title(T("Log On").Text);
+            return new ShapeResult(this, shape);
+        }
+
+        [AlwaysAccessible]
         [HttpPost]
-        public ActionResult Connect(string facebookAccessToken)
+        public ActionResult Connect(FacebookLogInRequest request, FormCollection form)
         {
             // Acquire Facebook settings
             var settings = services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
 
-            var client = new FacebookClient(facebookAccessToken);
+            var client = new FacebookClient(request.FacebookAccessToken);
 
             //https://developers.facebook.com/tools/explorer/?method=GET&path=me%3Ffields%3Dpicture.width(200).height(200)%2Cemail&version=v2.9
-            dynamic fbUser = client.Get("me?fields=picture.width(200).height(200),email");
+            var query = "me?fields=picture.height(200).width(200),email,first_name,last_name";
+            dynamic fbUser = client.Get(query);
             var email = (string)fbUser.email;
             var imageUrl = fbUser.picture.data.url;
 
@@ -49,11 +75,13 @@ namespace FacebookConnect.Controllers
             var user = auth.GetAuthenticatedUser();
             if (user != null)
             {
-                var facebookUser = user.As<FacebookUserPart>();
-                if (facebookUser.UserId !=null)
+                var facebookUser = user.ContentItem.As<FacebookUserPart>();
+                if (facebookUser != null)
                 {
-                    //update user facebook id
-                    facebookUser.UserId = user.Id;
+                    //update user Facebook profile 
+                    facebookUser.FirstName = (string)fbUser.first_name;
+                    facebookUser.LastName = (string)fbUser.last_name;
+                    facebookUser.ProfilePictureUrl = imageUrl;
                 }
             }
             // If not logged in check if exists in db and log on or redirect to register screen
@@ -66,11 +94,8 @@ namespace FacebookConnect.Controllers
 
                 if (user == null)
                 {
-                    // Create new user - redirect to form - there is no such binding between FB user Id and any Orchard user
-                    //result = RedirectToAction("Register", "Account", new { Area = "Orchard.Users" });
-
                     var userParam = new CreateUserParams(
-                        (string)fbUser.name,
+                        (string)fbUser.first_name,
                         GeneratePassword(8),
                         email,
                         null, null, true);
@@ -79,8 +104,10 @@ namespace FacebookConnect.Controllers
                 }
 
                 //relationship match with field UserId
-                var facebookUser = user.As<FacebookUserPart>();
-                facebookUser.UserId = user.Id;
+                var facebookUser = user.ContentItem.As<FacebookUserPart>();
+                facebookUser.FirstName = (string)fbUser.first_name;
+                facebookUser.LastName = (string)fbUser.last_name;
+                facebookUser.ProfilePictureUrl = imageUrl;
 
                 //sign in
                 auth.SignIn(user, true);
@@ -89,22 +116,7 @@ namespace FacebookConnect.Controllers
                 userEventHandler.LoggedIn(user);
             }
 
-
             return new JsonResult();
-        }
-
-        public ActionResult Connected()
-        {
-            //            // Acquire Facebook settings
-            //            var settings = _services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
-            //
-            //            var client = new FacebookApp(new FacebookSettings { AppId = settings.AppId, AppSecret = settings.AppSecret });
-            //            var authorizer = new Authorizer(client) { Perms = settings.Permissions };
-            //            if (authorizer.IsAuthorized())
-            //            {
-            //                return Redirect("~/");
-            //            }
-            return Redirect("~/");
         }
 
         public static string GeneratePassword(int resetPasswordLength)

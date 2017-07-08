@@ -3,21 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Records;
 
 namespace FacebookConnect.Models
 {
     public class FacebookUserPart : ContentPart<FacebookUserPartRecord>
     {
-        public int? UserId
-        {
-            get { return Record.UserId; }
-            set { Record.UserId = value; }
-        }
-    }
 
-    public class FacebookUserPartRecord : ContentPartRecord
-    {
-        public virtual int? UserId { get; set; }
+        public string FirstName
+        {
+            get { return Record.FirstName; }
+            set { Record.FirstName = value; }
+        }
+
+        public string LastName
+        {
+            get { return Record.LastName; }
+            set { Record.LastName = value; }
+        }
+
+        public string ProfilePictureUrl
+        {
+            get { return Record.ProfilePictureUrl; }
+            set { Record.ProfilePictureUrl = value; }
+        }
     }
 }

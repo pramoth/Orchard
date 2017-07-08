@@ -137,7 +137,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\FacebookController.cs" />
-    <Compile Include="Drivers\FacebookConnectPartDriver.cs" />
+    <Compile Include="Controllers\FacebookLogInRequest.cs" />
+    <Compile Include="Drivers\FacebookUserPartDriver.cs" />
     <Compile Include="Drivers\FacebookSettingsPartDriver.cs" />
     <Compile Include="Handlers\FacebookUserPartHandler.cs" />
     <Compile Include="Handlers\FacebookConnectPartHandler.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Models\FacebookSettingsPart.cs" />
     <Compile Include="Models\FacebookSettingsPartRecord.cs" />
     <Compile Include="Models\FacebookUserPart.cs" />
+    <Compile Include="Models\FacebookUserPartRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="ResourceRegistration.cs" />
     <Compile Include="Routes.cs" />
@@ -182,7 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="Views\Parts\Facebook.Connect.cshtml" />
+    <Content Include="Views\FacebookLogIn.cshtml" />
     <Content Include="sass-watch.bat" />
     <Content Include="Scss\hello.scss" />
     <None Include="web.Debug.config">
@@ -210,6 +212,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Parts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

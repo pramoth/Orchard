@@ -11,8 +11,13 @@ module App.Services {
         apiEndpoint: string;
     }
 
+    export class FbScope {
+        public scope: string;
+        public return_scopes: boolean;
+    }
+
     export interface IFb {
-        login(callback: (response: any) => any): void;
+        login(callback: (response: any) => any, scope: FbScope): void;
         getLoginStatus(callback: (response: any) => any, forceGetLogInStatus: boolean): void;
         api(url: string, callback: (response: any) => any): void;
     }
@@ -22,7 +27,14 @@ module App.Services {
     declare var Setting: ISetting;
     declare var antiForgeryToken: string;
 
+
     export class FacebookService {
+
+        private fbScope: FbScope =
+        {
+            return_scopes: true,
+            scope: "email,public_profile"
+        };
 
         private getAntiForgeryToken() {
             return $("[name='__RequestVerificationToken']").val();
@@ -38,7 +50,6 @@ module App.Services {
 
             var deferred = this.$q.defer();
             FB.login((response: any) => {
-
                 try {
                     if (response.status === 'connected') {
                         deferred.resolve(response);
@@ -56,7 +67,7 @@ module App.Services {
                 }
 
 
-            });
+            }, this.fbScope);
             return deferred.promise;
         }
 
@@ -82,11 +93,11 @@ module App.Services {
                     // The person is not logged into Facebook, so we're not sure if
                     // they are logged into this app or not.
 
-                    //uesful properties that can get from response
+                    //useful properties that can get from response
                     //response.authResponse.userID,
                     //response.authResponse.accessToken
 
-                    console.log(response);
+                    console.log("get log in status \n%o\n", response);
                     deferred.resolve(response);
 
                 } catch (ex) {
@@ -101,16 +112,19 @@ module App.Services {
 
         getUserInfo(response: any): ng.IPromise<any> {
             var authResponse = response.authResponse;
-            console.log(authResponse);
+            var grantedScopes = response.authResponse.grantedScopes;
+            console.log("grantedScopes \n%o\n", grantedScopes);
             var deferred = this.$q.defer();
-            var graphApiUrl = sprintf('/%s?fields=picture.width(540).height(540),id,first_name,email', authResponse.userID);
+            var graphApiUrl = sprintf('/%s?fields=picture.width(540).height(540),id,first_name,last_name,email',
+                authResponse.userID);
 
             FB.api(graphApiUrl, (queryResponse: any) => {
                 var userInfo: any = {};
                 userInfo.facebookAccessToken = authResponse.accessToken;
                 userInfo.facebookAppScopeUserId = queryResponse.id;
-                userInfo.profileUrl = queryResponse.picture.data.url;
-                userInfo.name = queryResponse.first_name;
+                userInfo.profilePictureUrl = queryResponse.picture.data.url;
+                userInfo.firstName = queryResponse.first_name;
+                userInfo.lastName = queryResponse.last_name;
                 userInfo.email = queryResponse.email;
                 deferred.resolve(userInfo);
             });
@@ -120,7 +134,7 @@ module App.Services {
 
         connect(user: any) {
             var deferred = this.$q.defer();
-            var url = sprintf("/FacebookConnect/Facebook/Connect/");
+            var url = sprintf("/facebook/connect/");
 
             var method = "POST";
             var req: ng.IRequestConfig = {
@@ -132,9 +146,7 @@ module App.Services {
                     'Accept': 'application/json',
                     '__RequestVerificationToken': this.getAntiForgeryToken()
                 },
-                data: {
-                    facebookAccessToken: user.facebookAccessToken,
-                }
+                data: user
             };
 
             this.$http(req).then((response: any) => {
@@ -150,7 +162,7 @@ module App.Services {
             var deferred = this.$q.defer();
             var url = sprintf("%s/users/existing?facebookId=%s",
                 Setting.apiEndpoint, user.facebookAppScopeUserId);
-            var req:ng.IRequestConfig = {
+            var req: ng.IRequestConfig = {
                 method: "GET",
                 url: url,
                 headers: {
@@ -178,7 +190,7 @@ module App.Services {
         isExistingUserWithEmail(user: any) {
             var deferred = this.$q.defer();
             var url = sprintf("%s/users/existing?email=%s", Setting.apiEndpoint, user.emailFromFacebook);
-            var req:ng.IRequestConfig = {
+            var req: ng.IRequestConfig = {
                 method: "GET",
                 url: url,
                 headers: {
@@ -208,7 +220,7 @@ module App.Services {
             var deferred = this.$q.defer();
             var url = sprintf("%s/users/facebook", Setting.apiEndpoint);
 
-            var req:ng.IRequestConfig = {
+            var req: ng.IRequestConfig = {
                 method: "PUT",
                 url: url,
                 headers: {
@@ -233,7 +245,7 @@ module App.Services {
         registerNewUser(user: any) {
             var deferred = this.$q.defer();
             var url = sprintf("%s/users/facebook", Setting.apiEndpoint);
-            var req:ng.IRequestConfig = {
+            var req: ng.IRequestConfig = {
                 method: "POST",
                 url: url,
                 headers: {
