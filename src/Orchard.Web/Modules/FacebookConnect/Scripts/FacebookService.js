@@ -3,8 +3,21 @@ var App;
     var Services;
     (function (Services) {
         var FbScope = (function () {
-            function FbScope() {
+            function FbScope(requiredPermissions) {
+                this.requiredPermissions = requiredPermissions;
+                this.return_scopes = true;
+                this.scope = requiredPermissions.join(",");
             }
+            FbScope.prototype.validateHasAllRequiredPermissions = function (grantedPermissions) {
+                for (var index = 0; index < this.requiredPermissions.length - 1; index++) {
+                    var permissionToCheck = this.requiredPermissions[index];
+                    var foundIndex = grantedPermissions.indexOf(permissionToCheck);
+                    console.log("found permission at index " + foundIndex);
+                    if (foundIndex < 0) {
+                        throw new Error("Please log in again and allow " + permissionToCheck + " permission.");
+                    }
+                }
+            };
             return FbScope;
         }());
         Services.FbScope = FbScope;
@@ -13,19 +26,19 @@ var App;
                 this.$q = $q;
                 this.$http = $http;
                 this.$document = $document;
-                this.fbScope = {
-                    return_scopes: true,
-                    scope: "email,public_profile"
-                };
+                this.fbScope = new FbScope(["email", "public_profile"]);
             }
             FacebookService.prototype.getAntiForgeryToken = function () {
                 return $("[name='__RequestVerificationToken']").val();
             };
             FacebookService.prototype.logIn = function () {
+                var _this = this;
                 var deferred = this.$q.defer();
                 FB.login(function (response) {
                     try {
                         if (response.status === 'connected') {
+                            var grantedScopes = response.authResponse.grantedScopes;
+                            _this.fbScope.validateHasAllRequiredPermissions(grantedScopes);
                             deferred.resolve(response);
                         }
                         else if (response.status === 'not_authorized') {

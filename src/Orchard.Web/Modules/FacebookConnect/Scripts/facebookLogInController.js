@@ -50,15 +50,7 @@ var App;
             FacebookLogInController.prototype.logIn = function () {
                 var _this = this;
                 console.log("log in called");
-                this.facebookService.getLogInStatus()
-                    .then(function (response) {
-                    if (response.status === 'connected') {
-                        return _this.$q.resolve(response);
-                    }
-                    else {
-                        return _this.facebookService.logIn();
-                    }
-                })
+                return this.facebookService.logIn()
                     .then(function (response) {
                     return _this.facebookService.getUserInfo(response);
                 })

@@ -35,14 +35,7 @@
         logIn() {
             console.log("log in called");
 
-            this.facebookService.getLogInStatus()
-                .then((response: any) => {
-                    if (response.status === 'connected') {
-                        return this.$q.resolve(response);//wrap response as queue promise
-                    } else {
-                        return this.facebookService.logIn();
-                    }
-                })
+            return this.facebookService.logIn()
                 .then((response: any) => {
                     //always get new user info
                     return this.facebookService.getUserInfo(response);

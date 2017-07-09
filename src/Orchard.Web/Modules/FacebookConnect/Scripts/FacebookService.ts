@@ -12,9 +12,27 @@ module App.Services {
     }
 
     export class FbScope {
+
+        public return_scopes: boolean = true;
         public scope: string;
-        public return_scopes: boolean;
+
+        constructor(private requiredPermissions: string[]) {
+            this.scope = requiredPermissions.join(",");
+        }
+
+        validateHasAllRequiredPermissions(grantedPermissions: string): void {
+            for (var index = 0; index < this.requiredPermissions.length - 1; index++) {
+                var permissionToCheck = this.requiredPermissions[index];
+                var foundIndex = grantedPermissions.indexOf(permissionToCheck);
+                console.log(`found permission at index ${foundIndex}`);
+
+                if (foundIndex < 0) {
+                    throw new Error(`Please log in again and allow ${permissionToCheck} permission.`);
+                }
+            }
+        }
     }
+
 
     export interface IFb {
         login(callback: (response: any) => any, scope: FbScope): void;
@@ -30,11 +48,7 @@ module App.Services {
 
     export class FacebookService {
 
-        private fbScope: FbScope =
-        {
-            return_scopes: true,
-            scope: "email,public_profile"
-        };
+        private fbScope: FbScope = new FbScope(["email", "public_profile"]);
 
         private getAntiForgeryToken() {
             return $("[name='__RequestVerificationToken']").val();
@@ -51,9 +65,13 @@ module App.Services {
             var deferred = this.$q.defer();
             FB.login((response: any) => {
                 try {
-                    if (response.status === 'connected') {
-                        deferred.resolve(response);
 
+                    if (response.status === 'connected') {
+
+                        var grantedScopes: string = response.authResponse.grantedScopes;
+                        this.fbScope.validateHasAllRequiredPermissions(grantedScopes);
+
+                        deferred.resolve(response);
                     } else if (response.status === 'not_authorized') {
                         // The person is logged into Facebook, but not your app.
                         deferred.reject(response);
@@ -65,7 +83,6 @@ module App.Services {
                 } catch (ex) {
                     deferred.reject(ex);
                 }
-
 
             }, this.fbScope);
             return deferred.promise;
