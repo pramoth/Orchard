@@ -51,12 +51,25 @@
                     this.redirect("/");
                 })
                 .catch((response: any) => {
-                    console.log(response);
-                    alert("Error, please reload page and try again");
+                    this.handleException(response);
                 })
                 .finally(() => {
                     console.log("finally");
                 });
+        }
+
+        handleException(response: any): void {
+            if (response instanceof Services.MissingFacebookPermissionExcepiton) {
+                var ex = response as Services.MissingFacebookPermissionExcepiton;
+                this.facebookService.removeApp()
+                    .then((response: any) => {
+                        alert(`Error, please allow "${ex.missingPermission}" permission`);
+                    }).catch((response: any) => {
+                        console.error(response);
+                    });
+            } else {
+                alert("Error, please retry log in again");
+            }
         }
 
     }

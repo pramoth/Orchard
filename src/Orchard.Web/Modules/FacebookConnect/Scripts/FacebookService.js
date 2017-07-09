@@ -2,43 +2,48 @@ var App;
 (function (App) {
     var Services;
     (function (Services) {
-        var FbScope = (function () {
-            function FbScope(requiredPermissions) {
+        class FbScope {
+            constructor(requiredPermissions) {
                 this.requiredPermissions = requiredPermissions;
                 this.return_scopes = true;
                 this.scope = requiredPermissions.join(",");
             }
-            FbScope.prototype.validateHasAllRequiredPermissions = function (grantedPermissions) {
+            validateHasAllRequiredPermissions(grantedPermissions) {
                 for (var index = 0; index < this.requiredPermissions.length - 1; index++) {
                     var permissionToCheck = this.requiredPermissions[index];
                     var foundIndex = grantedPermissions.indexOf(permissionToCheck);
-                    console.log("found permission at index " + foundIndex);
+                    console.log(`found permission at index ${foundIndex}`);
                     if (foundIndex < 0) {
-                        throw new Error("Please log in again and allow " + permissionToCheck + " permission.");
+                        throw new MissingFacebookPermissionExcepiton(permissionToCheck);
                     }
                 }
-            };
-            return FbScope;
-        }());
+            }
+        }
         Services.FbScope = FbScope;
-        var FacebookService = (function () {
-            function FacebookService($q, $http, $document) {
+        class MissingFacebookPermissionExcepiton extends Error {
+            constructor(missingPermission) {
+                super(`missing ${missingPermission} permission`);
+                this.missingPermission = missingPermission;
+            }
+        }
+        Services.MissingFacebookPermissionExcepiton = MissingFacebookPermissionExcepiton;
+        class FacebookService {
+            constructor($q, $http, $document) {
                 this.$q = $q;
                 this.$http = $http;
                 this.$document = $document;
                 this.fbScope = new FbScope(["email", "public_profile"]);
             }
-            FacebookService.prototype.getAntiForgeryToken = function () {
+            getAntiForgeryToken() {
                 return $("[name='__RequestVerificationToken']").val();
-            };
-            FacebookService.prototype.logIn = function () {
-                var _this = this;
+            }
+            logIn() {
                 var deferred = this.$q.defer();
-                FB.login(function (response) {
+                FB.login((response) => {
                     try {
                         if (response.status === 'connected') {
                             var grantedScopes = response.authResponse.grantedScopes;
-                            _this.fbScope.validateHasAllRequiredPermissions(grantedScopes);
+                            this.fbScope.validateHasAllRequiredPermissions(grantedScopes);
                             deferred.resolve(response);
                         }
                         else if (response.status === 'not_authorized') {
@@ -49,15 +54,18 @@ var App;
                         }
                     }
                     catch (ex) {
+                        console.log("dir");
+                        console.dir(ex);
+                        console.log("end dir");
                         deferred.reject(ex);
                     }
                 }, this.fbScope);
                 return deferred.promise;
-            };
-            FacebookService.prototype.getLogInStatus = function () {
+            }
+            getLogInStatus() {
                 var deferred = this.$q.defer();
-                var forceGetLogInStatus = true;
-                FB.getLoginStatus(function (response) {
+                const forceGetLogInStatus = true;
+                FB.getLoginStatus((response) => {
                     try {
                         console.log("get log in status \n%o\n", response);
                         deferred.resolve(response);
@@ -67,14 +75,14 @@ var App;
                     }
                 }, forceGetLogInStatus);
                 return deferred.promise;
-            };
-            FacebookService.prototype.getUserInfo = function (response) {
+            }
+            getUserInfo(response) {
                 var authResponse = response.authResponse;
                 var grantedScopes = response.authResponse.grantedScopes;
                 console.log("grantedScopes \n%o\n", grantedScopes);
                 var deferred = this.$q.defer();
                 var graphApiUrl = sprintf('/%s?fields=picture.width(540).height(540),id,first_name,last_name,email', authResponse.userID);
-                FB.api(graphApiUrl, function (queryResponse) {
+                FB.api(graphApiUrl, (queryResponse) => {
                     var userInfo = {};
                     userInfo.facebookAccessToken = authResponse.accessToken;
                     userInfo.facebookAppScopeUserId = queryResponse.id;
@@ -85,8 +93,21 @@ var App;
                     deferred.resolve(userInfo);
                 });
                 return deferred.promise;
-            };
-            FacebookService.prototype.connect = function (user) {
+            }
+            removeApp() {
+                var deferred = this.$q.defer();
+                FB.api('/me/permissions', 'delete', (response) => {
+                    try {
+                        console.log("remove app response \n%o\n", response);
+                        deferred.resolve(response);
+                    }
+                    catch (ex) {
+                        deferred.reject(ex);
+                    }
+                });
+                return deferred.promise;
+            }
+            connect(user) {
                 var deferred = this.$q.defer();
                 var url = sprintf("/facebook/connect/");
                 var method = "POST";
@@ -101,14 +122,14 @@ var App;
                     },
                     data: user
                 };
-                this.$http(req).then(function (response) {
+                this.$http(req).then((response) => {
                     deferred.resolve({});
-                }).catch(function (response) {
+                }).catch((response) => {
                     deferred.reject(response);
                 });
                 return deferred.promise;
-            };
-            FacebookService.prototype.isExistingUser = function (user) {
+            }
+            isExistingUser(user) {
                 var deferred = this.$q.defer();
                 var url = sprintf("%s/users/existing?facebookId=%s", Setting.apiEndpoint, user.facebookAppScopeUserId);
                 var req = {
@@ -121,15 +142,15 @@ var App;
                     }
                 };
                 this.$http(req)
-                    .then(function (response) {
+                    .then((response) => {
                     var data = { existingUser: response.data.existingUser };
                     deferred.resolve({ data: data });
-                }).catch(function (response) {
+                }).catch((response) => {
                     deferred.reject(response);
                 });
                 return deferred.promise;
-            };
-            FacebookService.prototype.isExistingUserWithEmail = function (user) {
+            }
+            isExistingUserWithEmail(user) {
                 var deferred = this.$q.defer();
                 var url = sprintf("%s/users/existing?email=%s", Setting.apiEndpoint, user.emailFromFacebook);
                 var req = {
@@ -142,19 +163,19 @@ var App;
                     }
                 };
                 this.$http(req)
-                    .then(function (response) {
+                    .then((response) => {
                     deferred.resolve({
                         data: {
                             existingUser: response.data.existingUser
                         }
                     });
                 })
-                    .catch(function (response) {
+                    .catch((response) => {
                     deferred.reject(response);
                 });
                 return deferred.promise;
-            };
-            FacebookService.prototype.updateUserWithFacebook = function (user) {
+            }
+            updateUserWithFacebook(user) {
                 var deferred = this.$q.defer();
                 var url = sprintf("%s/users/facebook", Setting.apiEndpoint);
                 var req = {
@@ -168,14 +189,14 @@ var App;
                     data: user
                 };
                 this.$http(req)
-                    .then(function (response) {
+                    .then((response) => {
                     deferred.resolve({});
-                }).catch(function (response) {
+                }).catch((response) => {
                     deferred.reject(response);
                 });
                 return deferred.promise;
-            };
-            FacebookService.prototype.registerNewUser = function (user) {
+            }
+            registerNewUser(user) {
                 var deferred = this.$q.defer();
                 var url = sprintf("%s/users/facebook", Setting.apiEndpoint);
                 var req = {
@@ -189,37 +210,36 @@ var App;
                     data: user
                 };
                 this.$http(req)
-                    .then(function (response) {
+                    .then((response) => {
                     deferred.resolve({ data: { userId: response } });
-                }).catch(function (response) {
+                }).catch((response) => {
                     deferred.reject({ data: response });
                 });
                 return deferred.promise;
-            };
-            FacebookService.prototype.showIntroLogInModal = function () {
+            }
+            showIntroLogInModal() {
                 var jQueryObject = this.$document.find("#introLogIn");
                 jQueryObject.modal();
-            };
-            FacebookService.prototype.requestUserLogIn = function () {
+            }
+            requestUserLogIn() {
                 var deferred = this.$q.defer();
                 this.showIntroLogInModal();
-                this.onSuccessLoggedIn(function () {
+                this.onSuccessLoggedIn(() => {
                     deferred.resolve({});
                 });
-                this.onErrorLoggedIn(function () {
+                this.onErrorLoggedIn(() => {
                     deferred.reject({});
                 });
                 return deferred.promise;
-            };
+            }
             ;
-            FacebookService.prototype.onSuccessLoggedIn = function (callback) {
+            onSuccessLoggedIn(callback) {
                 callback();
-            };
-            FacebookService.prototype.onErrorLoggedIn = function (callback) {
+            }
+            onErrorLoggedIn(callback) {
                 callback();
-            };
-            return FacebookService;
-        }());
+            }
+        }
         Services.FacebookService = FacebookService;
         angular.module("facebookConnect")
             .service("facebookService", ["$q", "$http", "$document", FacebookService]);

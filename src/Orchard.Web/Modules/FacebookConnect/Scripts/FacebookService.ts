@@ -27,7 +27,8 @@ module App.Services {
                 console.log(`found permission at index ${foundIndex}`);
 
                 if (foundIndex < 0) {
-                    throw new Error(`Please log in again and allow ${permissionToCheck} permission.`);
+                    //throw new Error(`Please log in again and allow ${permissionToCheck} permission.`);
+                    throw new MissingFacebookPermissionExcepiton(permissionToCheck);
                 }
             }
         }
@@ -38,6 +39,7 @@ module App.Services {
         login(callback: (response: any) => any, scope: FbScope): void;
         getLoginStatus(callback: (response: any) => any, forceGetLogInStatus: boolean): void;
         api(url: string, callback: (response: any) => any): void;
+        api(url: string, method: string, callback: (response: any) => any): void;
     }
 
     //define global variable
@@ -45,6 +47,12 @@ module App.Services {
     declare var Setting: ISetting;
     declare var antiForgeryToken: string;
 
+    export class MissingFacebookPermissionExcepiton extends Error {
+        constructor(public missingPermission: string) {
+            super(`missing ${missingPermission} permission`);
+
+        }
+    }
 
     export class FacebookService {
 
@@ -65,7 +73,6 @@ module App.Services {
             var deferred = this.$q.defer();
             FB.login((response: any) => {
                 try {
-
                     if (response.status === 'connected') {
 
                         var grantedScopes: string = response.authResponse.grantedScopes;
@@ -80,9 +87,14 @@ module App.Services {
                         // they are logged into this app or not.
                         deferred.reject("user not logged into Facebook");
                     }
+
                 } catch (ex) {
+                    console.log("dir");
+                    console.dir(ex);
+                    console.log("end dir");
                     deferred.reject(ex);
                 }
+
 
             }, this.fbScope);
             return deferred.promise;
@@ -146,6 +158,21 @@ module App.Services {
                 deferred.resolve(userInfo);
             });
 
+            return deferred.promise;
+        }
+
+        removeApp(): ng.IPromise<any> {
+            var deferred = this.$q.defer();
+            FB.api('/me/permissions', 'delete', (response: any) => {
+
+                try {
+                    console.log("remove app response \n%o\n", response);
+                    deferred.resolve(response);
+                } catch (ex) {
+                    deferred.reject(ex);
+                }
+            });
+            //return promise immediately
             return deferred.promise;
         }
 
