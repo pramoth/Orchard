@@ -9,19 +9,20 @@ namespace FacebookConnect
         public int Create() {
 
             //create table for a setting record 
-            SchemaBuilder.CreateTable( nameof(FacebookSettingsPartRecord),
-                                      table => table
-                                          .ContentPartRecord()
-                                          .Column<string>("AppId", c => c.Unlimited())
-                                          .Column<string>("AppSecret", c => c.Unlimited()));
+            SchemaBuilder.CreateTable(nameof(FacebookConnectSettingsPartRecord),
+                table => table
+                .ContentPartRecord()
+                .Column<string>(nameof(FacebookConnectSettingsPartRecord.FacebookAppId), c => c.Unlimited())
+                .Column<string>(nameof(FacebookConnectSettingsPartRecord.AwsAccessKeyId), c => c.Unlimited())
+                .Column<string>(nameof(FacebookConnectSettingsPartRecord.AwsSecretAccesskey), c => c.Unlimited())
+                .Column<string>(nameof(FacebookConnectSettingsPartRecord.S3BucketName), c => c.Unlimited()));
 
             //create a table for FacebookUserPart record
             SchemaBuilder.CreateTable( nameof(FacebookUserPartRecord),
-                                      table => table
-                                          .ContentPartRecord()
-                                          .Column<string>("FirstName")
-                                          .Column<string>("LastName")
-                                          .Column<string>("ProfilePictureUrl")
+                table => table.ContentPartRecord()
+                .Column<string>("FirstName")
+                .Column<string>("LastName")
+                .Column<string>("ProfilePictureUrl")
                 );
 
             //alter User content type to attach FacebookUserPart

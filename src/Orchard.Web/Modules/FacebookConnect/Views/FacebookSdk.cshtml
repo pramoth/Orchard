@@ -1,7 +1,12 @@
-﻿<script type="text/javascript">
+﻿@using FacebookConnect.Models
+@{
+    var setting = Model.Setting as FacebookConnectSettingsPart;
+}
+
+<script type="text/javascript">
 
     Setting = {};
-    Setting.facebookAppId = 958934724183715;
+    Setting.facebookAppId = @setting.FacebookAppId;
 
     window.fbAsyncInit = function () {
         FB.init({

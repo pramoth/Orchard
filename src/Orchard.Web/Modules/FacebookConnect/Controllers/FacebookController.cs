@@ -14,34 +14,44 @@ using Orchard.Logging;
 using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Themes;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Net;
+using Amazon.S3;
+using Amazon.S3.Model;
+using System.Threading.Tasks;
 
 namespace FacebookConnect.Controllers
 {
     [HandleError, Themed]
     public class FacebookController : Controller
     {
-        private readonly IOrchardServices services;
+        private readonly IOrchardServices orchardService;
         private readonly IAuthenticationService auth;
         private readonly IMembershipService membershipService;
         private readonly IUserEventHandler userEventHandler;
+        private FacebookConnectSettingsPart settings;
 
         //property injection
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
         public FacebookController(
-            IOrchardServices services,
+            IOrchardServices orchardService,
             IAuthenticationService auth,
             IMembershipService membershipService,
             IUserEventHandler userEventHandler)
         {
-            this.services = services;
+            this.orchardService = orchardService;
             this.auth = auth;
             this.membershipService = membershipService;
             this.userEventHandler = userEventHandler;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
+
+            // Acquire Facebook settings
+            settings = orchardService.WorkContext.CurrentSite.As<FacebookConnectSettingsPart>();
         }
 
 
@@ -52,71 +62,74 @@ namespace FacebookConnect.Controllers
             if (auth.GetAuthenticatedUser() != null)
                 return this.RedirectLocal(returnUrl);
 
-            var shape = services.New.FacebookLogIn().Title(T("Log On").Text);
+            var shape = orchardService.New.FacebookLogIn().Title(T("Log On").Text);
             return new ShapeResult(this, shape);
         }
 
         [AlwaysAccessible]
         [HttpPost]
-        public ActionResult Connect(FacebookLogInRequest request, FormCollection form)
+        public async Task<ActionResult> Connect(FacebookLogInRequest request, FormCollection form)
         {
-            // Acquire Facebook settings
-            var settings = services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
-
-            var client = new FacebookClient(request.FacebookAccessToken);
-
-            //https://developers.facebook.com/tools/explorer/?method=GET&path=me%3Ffields%3Dpicture.width(200).height(200)%2Cemail&version=v2.9
-            var query = "me?fields=picture.height(200).width(200),email,first_name,last_name";
-            dynamic fbUser = client.Get(query);
-            var email = (string)fbUser.email;
-            var imageUrl = fbUser.picture.data.url;
+            //todo better error response to client to show why we have error
+            ValidateAccessToken(request);
 
             // If already logged in update the account info
             var user = auth.GetAuthenticatedUser();
-            if (user != null)
+            if (user == null)
             {
-                var facebookUser = user.ContentItem.As<FacebookUserPart>();
-                if (facebookUser != null)
-                {
-                    //update user Facebook profile 
-                    facebookUser.FirstName = (string)fbUser.first_name;
-                    facebookUser.LastName = (string)fbUser.last_name;
-                    facebookUser.ProfilePictureUrl = imageUrl;
-                }
-            }
-            // If not logged in check if exists in db and log on or redirect to register screen
-            else
-            {
-                user = services.ContentManager.Query<UserPart, UserPartRecord>()
-                   .Where<UserPartRecord>(x => x.Email == email)
+                //If user does not log in and create if user does not exist in database
+                user = orchardService.ContentManager.Query<UserPart, UserPartRecord>()
+                   .Where<UserPartRecord>(x => x.Email == request.Email)
                    .List<IUser>()
                    .SingleOrDefault();
 
                 if (user == null)
                 {
                     var userParam = new CreateUserParams(
-                        (string)fbUser.first_name,
+                        request.FirstName,
                         GeneratePassword(8),
-                        email,
+                        request.Email,
                         null, null, true);
-
                     user = membershipService.CreateUser(userParam);
                 }
-
-                //relationship match with field UserId
-                var facebookUser = user.ContentItem.As<FacebookUserPart>();
-                facebookUser.FirstName = (string)fbUser.first_name;
-                facebookUser.LastName = (string)fbUser.last_name;
-                facebookUser.ProfilePictureUrl = imageUrl;
-
-                //sign in
-                auth.SignIn(user, true);
-
-                //update last log in, to make cookie valid
-                userEventHandler.LoggedIn(user);
             }
 
+            //always update profile
+            user = await UpdateFacebookUserPart(request, user);
+            //sign in
+            auth.SignIn(user, true);
+
+            //update last log in, to make cookie valid
+            userEventHandler.LoggedIn(user);
             return new JsonResult();
+        }
+
+        private async Task<IUser> UpdateFacebookUserPart(FacebookLogInRequest request, IUser user)
+        {
+            //update username
+            var userPart = user.ContentItem.As<UserPart>();
+            userPart.UserName = request.FirstName;
+            userPart.NormalizedUserName = userPart.UserName.ToLowerInvariant();
+            //update user Facebook profile 
+            var facebookUser = user.ContentItem.As<FacebookUserPart>();
+            facebookUser.FirstName = request.FirstName;
+            facebookUser.LastName = request.LastName;
+            facebookUser.ProfilePictureUrl = await UploadProfileImage(request);
+            var updatedUser = userPart as IUser;
+            return updatedUser;
+        }
+
+        private static void ValidateAccessToken(FacebookLogInRequest request)
+        {
+            var client = new FacebookClient(request.FacebookAccessToken);
+            //https://developers.facebook.com/tools/explorer/?method=GET&path=me%3Ffields%3Dpicture.width(200).height(200)%2Cemail&version=v2.9
+            var query = "me?fields=picture.height(200).width(200),email,first_name,last_name";
+            dynamic queryResult = client.Get(query);
+            if (request.FacebookAppScopeUserId != Convert.ToInt64(queryResult.id) ||
+                request.Email != (string)queryResult.email)
+            {
+                throw new InvalidOperationException("invalid Facebook access token");
+            }
         }
 
         public static string GeneratePassword(int resetPasswordLength)
@@ -135,6 +148,48 @@ namespace FacebookConnect.Controllers
                 newPassword.Append(characters[rnd.Next(characters.Length)]);
             }
             return newPassword.ToString();
+        }
+
+        private async Task<string> UploadProfileImage(FacebookLogInRequest request)
+        {
+            //remove query string path
+            var pathWithOutQueryString = Regex.Replace(request.ProfilePictureUrl, @"\?.*", "");
+            var fileExtension = Path.GetExtension(pathWithOutQueryString);
+
+            var now = DateTime.UtcNow;
+            var fileName = $"file-{now.ToString("yyyy-MM-dd-HH-mm-ss")}-{Guid.NewGuid()}{fileExtension}";
+            var fileFullName = $"uploaded/{now.ToString("yyyy/MM/dd/HH")}/{fileName}";
+
+            MemoryStream memoryStream;
+            using (var webClient = new WebClient())
+            {
+                var fileData = await webClient
+                    .DownloadDataTaskAsync(request.ProfilePictureUrl);
+                memoryStream = new MemoryStream(fileData);
+            }
+
+            using (var client = new AmazonS3Client(
+                settings.AwsAccessKeyId,
+                settings.AwsSecretAccesskey,
+                Amazon.RegionEndpoint.APSoutheast1))
+            using (memoryStream)
+            {
+
+                var putRequest = new PutObjectRequest
+                {
+                    BucketName = settings.S3BucketName,
+                    InputStream = memoryStream,
+                    StorageClass = S3StorageClass.ReducedRedundancy,
+                    ContentType = "image/jpg",
+                    CannedACL = S3CannedACL.PublicRead
+                };
+
+                putRequest.Metadata.Add("x-amz-meta-title", fileName);
+                putRequest.Key = fileFullName;
+
+                await client.PutObjectAsync(putRequest);
+                return $"https://s3-ap-southeast-1.amazonaws.com/{settings.S3BucketName}/{fileFullName}";
+            }
         }
 
 

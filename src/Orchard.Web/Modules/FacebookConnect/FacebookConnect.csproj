@@ -64,6 +64,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\AWSSDK.Core.3.3.17\lib\net45\AWSSDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.S3, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\AWSSDK.S3.3.3.8.2\lib\net45\AWSSDK.S3.dll</HintPath>
+    </Reference>
     <Reference Include="Facebook, Version=6.0.10.0, Culture=neutral, PublicKeyToken=58cb4f2111d1e6de, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Facebook.7.0.6\lib\net45\Facebook.dll</HintPath>
       <Private>True</Private>
@@ -137,7 +143,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\FacebookController.cs" />
-    <Compile Include="Controllers\FacebookLogInRequest.cs" />
+    <Compile Include="Models\FacebookConnectSettingsPartRecord.cs" />
+    <Compile Include="Models\FacebookLogInRequest.cs" />
     <Compile Include="Drivers\FacebookUserPartDriver.cs" />
     <Compile Include="Drivers\FacebookSettingsPartDriver.cs" />
     <Compile Include="Handlers\FacebookUserPartHandler.cs" />
@@ -146,8 +153,7 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="MissingSettingsBanner.cs" />
     <Compile Include="Models\FacebookConnectPart.cs" />
-    <Compile Include="Models\FacebookSettingsPart.cs" />
-    <Compile Include="Models\FacebookSettingsPartRecord.cs" />
+    <Compile Include="Models\FacebookConnectSettingsPart.cs" />
     <Compile Include="Models\FacebookUserPart.cs" />
     <Compile Include="Models\FacebookUserPartRecord.cs" />
     <Compile Include="Permissions.cs" />
@@ -164,20 +170,6 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
-      <Project>{2d1d92bb-4555-4cbe-8d0e-63563d6ce4c6}</Project>
-      <Name>Orchard.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
-      <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
-      <Name>Orchard.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Users\Orchard.Users.csproj">
-      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
-      <Name>Orchard.Users</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />
@@ -214,6 +206,23 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Parts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2d1d92bb-4555-4cbe-8d0e-63563d6ce4c6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\..\packages\AWSSDK.S3.3.3.8.2\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

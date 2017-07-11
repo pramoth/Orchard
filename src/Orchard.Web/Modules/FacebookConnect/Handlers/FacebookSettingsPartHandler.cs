@@ -10,9 +10,9 @@ namespace FacebookConnect.Handlers
 {
     public class FacebookSettingsPartHandler : ContentHandler
     {
-        public FacebookSettingsPartHandler(IRepository<FacebookSettingsPartRecord> repository)
+        public FacebookSettingsPartHandler(IRepository<FacebookConnectSettingsPartRecord> repository)
         {
-            Filters.Add(new ActivatingFilter<FacebookSettingsPart>("Site"));
+            Filters.Add(new ActivatingFilter<FacebookConnectSettingsPart>("Site"));
             Filters.Add(StorageFilter.For(repository));
         }
 

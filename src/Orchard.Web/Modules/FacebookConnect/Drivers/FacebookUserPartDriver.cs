@@ -24,7 +24,7 @@ namespace FacebookConnect.Drivers
         protected override DriverResult Display(FacebookConnectPart part, string displayType, dynamic shapeHelper)
         {
             // Acquire Facebook settings
-            var settings = services.WorkContext.CurrentSite.As<FacebookSettingsPart>();
+            var settings = services.WorkContext.CurrentSite.As<FacebookConnectSettingsPart>();
             var user = auth.GetAuthenticatedUser();
             var facebookUserContent = user.ContentItem.As<FacebookUserPart>();
             var isConnected = user != null && facebookUserContent !=null;

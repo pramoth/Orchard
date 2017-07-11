@@ -23,9 +23,13 @@ namespace FacebookConnect
         public IEnumerable<NotifyEntry> GetNotifications()
         {
 
-            var facebookSettings = _orchardServices.WorkContext.CurrentSite.As<FacebookSettingsPart>();
+            var facebookSettings = _orchardServices.WorkContext.CurrentSite.As<FacebookConnectSettingsPart>();
 
-            if (facebookSettings == null || string.IsNullOrWhiteSpace(facebookSettings.AppId) || string.IsNullOrWhiteSpace(facebookSettings.AppSecret))
+            if (facebookSettings == null 
+                || string.IsNullOrWhiteSpace(facebookSettings.FacebookAppId)
+                || string.IsNullOrWhiteSpace(facebookSettings.AwsAccessKeyId)
+                || string.IsNullOrWhiteSpace(facebookSettings.AwsSecretAccesskey)
+                || string.IsNullOrWhiteSpace(facebookSettings.S3BucketName))
             {
                 yield return new NotifyEntry { 
                     Message =

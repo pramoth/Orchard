@@ -8,7 +8,7 @@ using Orchard.ContentManagement;
 
 namespace FacebookConnect.Drivers
 {
-    public class FacebookSettingsPartDriver : ContentPartDriver<FacebookSettingsPart>
+    public class FacebookSettingsPartDriver : ContentPartDriver<FacebookConnectSettingsPart>
     {
         public FacebookSettingsPartDriver(
             INotifier notifier,
@@ -31,7 +31,7 @@ namespace FacebookConnect.Drivers
         private readonly IAuthenticationService authenticationService;
         private readonly IOrchardServices services;
 
-        protected override DriverResult Editor(FacebookSettingsPart part, dynamic shapeHelper)
+        protected override DriverResult Editor(FacebookConnectSettingsPart part, dynamic shapeHelper)
         {
             if (!authorizationService.TryCheckAccess(Permissions.EditSettings, 
                 authenticationService.GetAuthenticatedUser(), part))
@@ -42,7 +42,7 @@ namespace FacebookConnect.Drivers
                     .EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
         }
 
-        protected override DriverResult Editor(FacebookSettingsPart part, IUpdateModel updater, dynamic shapeHelper)
+        protected override DriverResult Editor(FacebookConnectSettingsPart part, IUpdateModel updater, dynamic shapeHelper)
         {
             if (!authorizationService
                 .TryCheckAccess(Permissions.EditSettings, authenticationService.GetAuthenticatedUser(), part))
