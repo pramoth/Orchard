@@ -3,7 +3,7 @@ using Amazon.S3.IO;
 using Orchard.FileSystems.Media;
 using System.Text.RegularExpressions;
 
-namespace Amba.AmazonS3.Services
+namespace CodeSanook.AmazonS3.Services
 {
     public class AmazonS3StorageFolder : IStorageFolder
     {

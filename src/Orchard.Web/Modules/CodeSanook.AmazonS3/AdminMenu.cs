@@ -18,7 +18,7 @@ namespace Amba.AmazonS3
             builder
               .Add(T("Settings"), menu => menu
                     .Add(T("Amazon S3"), "1.0", x => x
-                        .Add(T("Settings"), "1.0", a => a.Action("Settings", "Admin", new { area = "Amba.AmazonS3" }).Permission(StandardPermissions.SiteOwner).LocalNav())
+                        .Add(T("Settings"), "1.0", a => a.Action("Settings", "Admin", new { area = "CodeSanook.AmazonS3" }).Permission(StandardPermissions.SiteOwner).LocalNav())
                         
                     ));;
              

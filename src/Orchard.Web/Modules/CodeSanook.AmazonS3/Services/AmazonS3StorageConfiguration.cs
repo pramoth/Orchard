@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Amba.AmazonS3.Models;
 using Orchard;
 using Orchard.Data;
+using CodeSanook.AmazonS3.Models;
 
-namespace Amba.AmazonS3.Services
+namespace CodeSanook.AmazonS3.Services
 {
     public interface IAmazonS3StorageConfiguration : IDependency
     {

@@ -2,7 +2,7 @@
 
 using Amazon.S3.IO;
 
-namespace Amba.AmazonS3.Services
+namespace CodeSanook.AmazonS3.Services
 {
     public class AmazonS3StreamProxy : Stream
     {

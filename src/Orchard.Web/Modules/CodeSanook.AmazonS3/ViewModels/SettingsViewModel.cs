@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Amba.AmazonS3.ViewModels
+namespace CodeSanook.AmazonS3.ViewModels
 {
     public class SettingsViewModel
     {

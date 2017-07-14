@@ -4,8 +4,9 @@ using Amazon.S3.IO;
 using Orchard.FileSystems.Media;
 using PathUtils = System.IO.Path;
 using System.Text.RegularExpressions;
+using CodeSanook.AmazonS3.Services;
 
-namespace Amba.AmazonS3.Services
+namespace CodeSanook.AmazonS3.Services
 {
     public class AmazonS3StorageFile : IStorageFile
     {

@@ -15,7 +15,7 @@ using Orchard.FileSystems.Media;
 using PathUtils = System.IO.Path;
 using System.Text.RegularExpressions;
 
-namespace Amba.AmazonS3.Services
+namespace CodeSanook.AmazonS3.Services
 {
     public interface IAmazonS3StorageProvider : IStorageProvider
     {

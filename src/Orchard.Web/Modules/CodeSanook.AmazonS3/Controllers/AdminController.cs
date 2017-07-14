@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Amba.AmazonS3.Services;
-using Amba.AmazonS3.ViewModels;
+using CodeSanook.AmazonS3.Services;
+using CodeSanook.AmazonS3.ViewModels;
 using Orchard.UI.Admin;
 
-namespace Amba.AmazonS3.Controllers
+namespace CodeSanook.AmazonS3.Controllers
 {
     [Admin]
     public class AdminController : Controller

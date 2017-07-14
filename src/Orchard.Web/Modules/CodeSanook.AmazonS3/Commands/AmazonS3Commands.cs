@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Amba.AmazonS3.Services;
+using CodeSanook.AmazonS3.Services;
 using Orchard.Commands;
 
-namespace Amba.AmazonS3.Commands
+namespace CodeSanook.AmazonS3.Commands
 {
     public class AmazonS3Commands : DefaultOrchardCommandHandler
     {
