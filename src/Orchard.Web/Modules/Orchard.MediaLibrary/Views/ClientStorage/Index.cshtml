@@ -80,6 +80,10 @@
             // Add drag-n-drop HTML5 support
             $('#fileupload').fileupload({
                 autoUpload: true,
+                requestHeaders: {
+                    "Authorization": "Token",
+                    __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
+                },
                 @if(Model.Replace == null) {
                 <text>
                 url: '@Url.Action("Upload")',
@@ -121,6 +125,11 @@
                         var file = data.files[i];
                         data.context = viewModel.upload(file);
                     }
+
+                    //set additional HTTP header
+                    data.headers = {
+                        '__RequestVerificationToken': '@Html.AntiForgeryTokenValueOrchard()'
+                    };
 
                     data.submit();
                 },

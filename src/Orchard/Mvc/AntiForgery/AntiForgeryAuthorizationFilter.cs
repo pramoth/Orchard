@@ -39,7 +39,7 @@ namespace Orchard.Mvc.AntiForgery
             {
                 var antiForgeryCookie = filterContext.HttpContext.Request.Cookies[AntiForgeryConfig.CookieName];
                 var cookieValue = antiForgeryCookie?.Value;
-                var headerValue = filterContext.HttpContext.Request.Headers["__RequestVerificationToken"];
+                 var headerValue = filterContext.HttpContext.Request.Headers["__RequestVerificationToken"];
                 System.Web.Helpers.AntiForgery.Validate(cookieValue, headerValue);
             }
             else
@@ -51,7 +51,6 @@ namespace Orchard.Mvc.AntiForgery
                     filterContext.HttpContext = ((HackHttpContext)filterContext.HttpContext).OriginalHttpContextBase;
             }
         }
-
 
 
         private bool IsAntiForgeryProtectionEnabled(AuthorizationContext context)

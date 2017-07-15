@@ -35,7 +35,7 @@ namespace CodeSanook.AmazonS3.Services
             {
                 record = new AmazonS3SettingsRecord()
                 {
-                    AWSS3PublicUrl = "https://s3.amazonaws.com/"
+                    AWSS3PublicUrl = "https://s3-ap-southeast-1.amazonaws.com/"
                 };
                 _amazonS3SettingsRepository.Create(record);
             }
