@@ -25,19 +25,25 @@ namespace CodeSanook.Web
         private Dictionary<string, ModuleFeature> features;
         private readonly IRepository<UserRolesPartRecord> userRolesRepository;
         private readonly IRoleService roleService;
+        private readonly IThemeService themeService;
         private readonly ISiteThemeService siteThemeService;
+
+
+
 
         public Migrations(
             IModuleService moduleService,
             IOrchardServices orchardService,
             IRepository<UserRolesPartRecord> userRolesRepository,
             IRoleService roleService,
+            IThemeService themeService,
             ISiteThemeService siteThemeService)
         {
             this.moduleService = moduleService;
             this.orchardService = orchardService;
             this.userRolesRepository = userRolesRepository;
             this.roleService = roleService;
+            this.themeService = themeService;
             this.siteThemeService = siteThemeService;
             features = moduleService.GetAvailableFeatures().ToDictionary(m => m.Descriptor.Id, m => m);
         }
@@ -75,8 +81,9 @@ namespace CodeSanook.Web
                         );
 
             //update theme
-           // var themeId = "TheBootstrapMachine";
-           // siteThemeService.SetSiteTheme(themeId);
+            var themeId = "TheBootstrapMachine";
+            themeService.EnableThemeFeatures(themeId);
+            siteThemeService.SetSiteTheme(themeId);
 
             return 1;
         }
