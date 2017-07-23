@@ -28,9 +28,6 @@ namespace CodeSanook.Web
         private readonly IThemeService themeService;
         private readonly ISiteThemeService siteThemeService;
 
-
-
-
         public Migrations(
             IModuleService moduleService,
             IOrchardServices orchardService,
@@ -78,7 +75,12 @@ namespace CodeSanook.Web
                     .WithPart("BodyPart", partBuilder => partBuilder
                     //body part use this type to get a setting
                         .WithSetting("BodyTypePartSettings.Flavor", "markdown"))
-                        );
+                     //.RemovePart("CommentsContainerPart")
+                     .RemovePart("CommentsPart") //defined in blog.recipe.xml
+            );
+
+            ContentDefinitionManager.AlterTypeDefinition("Blog",
+                cfg => cfg.RemovePart("CommentsContainerPart"));
 
             //update theme
             var themeId = "TheBootstrapMachine";
