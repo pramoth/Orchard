@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
 EndProject
@@ -287,6 +287,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSanook.FacebookConnect", "Orchard.Web\Modules\CodeSanook.FacebookConnect\CodeSanook.FacebookConnect.csproj", "{05A204B2-1EFB-4107-9E4D-E1D149FF486F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSanook.AmazonS3", "Orchard.Web\Modules\CodeSanook.AmazonS3\CodeSanook.AmazonS3.csproj", "{F7A05B63-9397-4C6A-B625-EDD5D0D55675}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSanook.Configuration", "Orchard.Web\Modules\CodeSanook.Configuration\CodeSanook.Configuration.csproj", "{55A5AF31-438D-4712-B8B6-EE01327842AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1168,6 +1170,16 @@ Global
 		{F7A05B63-9397-4C6A-B625-EDD5D0D55675}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{F7A05B63-9397-4C6A-B625-EDD5D0D55675}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7A05B63-9397-4C6A-B625-EDD5D0D55675}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55A5AF31-438D-4712-B8B6-EE01327842AE}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{55A5AF31-438D-4712-B8B6-EE01327842AE}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{55A5AF31-438D-4712-B8B6-EE01327842AE}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{55A5AF31-438D-4712-B8B6-EE01327842AE}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{55A5AF31-438D-4712-B8B6-EE01327842AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55A5AF31-438D-4712-B8B6-EE01327842AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55A5AF31-438D-4712-B8B6-EE01327842AE}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{55A5AF31-438D-4712-B8B6-EE01327842AE}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{55A5AF31-438D-4712-B8B6-EE01327842AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55A5AF31-438D-4712-B8B6-EE01327842AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1261,6 +1273,7 @@ Global
 		{3B04626D-E44E-4878-B92B-A39BD3572461} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{05A204B2-1EFB-4107-9E4D-E1D149FF486F} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{F7A05B63-9397-4C6A-B625-EDD5D0D55675} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{55A5AF31-438D-4712-B8B6-EE01327842AE} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4
