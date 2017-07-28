@@ -14,7 +14,6 @@ namespace CodeSanook.AmazonS3.Services
         string AWSSecretKey { get; set; }
         string AWSFileBucket { get; set; }
         string AWSS3PublicUrl { get; set; }
-        string RootFolder { get; set; }
         void Save();
     }
 
@@ -53,12 +52,6 @@ namespace CodeSanook.AmazonS3.Services
                 }
                 return _record;
             }
-        }
-
-        public string RootFolder
-        {
-            get { return _record.RootFolder; }
-            set { _record.RootFolder = value; }
         }
 
         public void Save()

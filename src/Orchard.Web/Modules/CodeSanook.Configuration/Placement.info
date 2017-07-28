@@ -1,4 +1,4 @@
 <Placement>
-    <Place Parts_AmazonS3Settings="Content:before"/>
-    <Place Parts_AmazonS3Settings="Content:before"/>
+  <!--shape type-->
+  <Place Parts_CodeSanook_ModuleSetting="Content:1"/>
 </Placement>

@@ -38,6 +38,7 @@ namespace CodeSanook.Web
         {
             this.moduleService = moduleService;
             this.orchardService = orchardService;
+
             this.userRolesRepository = userRolesRepository;
             this.roleService = roleService;
             this.themeService = themeService;

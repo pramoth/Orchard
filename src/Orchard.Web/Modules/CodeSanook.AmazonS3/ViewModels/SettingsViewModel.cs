@@ -18,12 +18,10 @@ namespace CodeSanook.AmazonS3.ViewModels
             this.AWSFileBucket = _settingsService.AWSFileBucket;
             this.AWSS3PublicUrl = _settingsService.AWSS3PublicUrl;
             this.AWSSecretKey = _settingsService.AWSSecretKey;
-            RootFolder = _settingsService.RootFolder;
         }
         public string AWSAccessKey { get; set; }
         public string AWSSecretKey { get; set; }
         public string AWSFileBucket { get; set; }
-        public string RootFolder { get; set; }
         public string AWSS3PublicUrl { get; set; }
     }
 }

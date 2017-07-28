@@ -35,7 +35,6 @@ namespace CodeSanook.AmazonS3.Controllers
             _settingsService.AWSFileBucket = viewModel.AWSFileBucket;
             _settingsService.AWSS3PublicUrl = viewModel.AWSS3PublicUrl;
             _settingsService.AWSSecretKey = viewModel.AWSSecretKey;
-            _settingsService.RootFolder = viewModel.RootFolder;
             _settingsService.Save();
             return RedirectToAction("Settings");
         }

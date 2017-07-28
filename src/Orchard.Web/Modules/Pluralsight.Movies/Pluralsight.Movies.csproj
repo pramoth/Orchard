@@ -144,7 +144,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\Movie.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\MovieSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">
