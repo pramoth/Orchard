@@ -14,7 +14,7 @@ namespace CodeSanook.Configuration
         public int Create()
         {
             //create table for content part records 
-            SchemaBuilder.CreateTable("CodeSanookModuleSettingPartRecord",
+            SchemaBuilder.CreateTable("ModuleSettingPartRecord",
                 table => table
                 .ContentPartRecord()
                 .Column<string>("AwsAccessKey", c => c.WithLength(255))

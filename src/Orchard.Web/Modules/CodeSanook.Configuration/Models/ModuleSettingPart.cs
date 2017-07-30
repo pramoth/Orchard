@@ -6,9 +6,8 @@ using System.Web;
 
 namespace CodeSanook.Configuration.Models
 {
-    public class CodeSanookModuleSettingPart : ContentPart<CodeSanookModuleSettingPartRecord>
+    public class ModuleSettingPart : ContentPart<ModuleSettingPartRecord>
     {
-
         public virtual string AwsAccessKey
         {
             get { return Record.AwsAccessKey; }

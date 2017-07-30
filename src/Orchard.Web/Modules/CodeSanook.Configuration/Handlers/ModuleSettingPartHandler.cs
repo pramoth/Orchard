@@ -5,17 +5,15 @@ using Orchard.Data;
 using Orchard.Localization;
 
 namespace Orchard.Users.Handlers {
-    public class CodeSanookModuleSettingPartHandler  : ContentHandler {
+    public class ModuleSettingPartHandler  : ContentHandler {
 
         public Localizer T { get; set; }
-
-
             
-        public CodeSanookModuleSettingPartHandler (IRepository<CodeSanookModuleSettingPartRecord> repository)
+        public ModuleSettingPartHandler (IRepository<ModuleSettingPartRecord> repository)
         {
             T = NullLocalizer.Instance;
             Filters.Add(StorageFilter.For(repository));
-            Filters.Add(new ActivatingFilter<CodeSanookModuleSettingPart>("Site"));
+            Filters.Add(new ActivatingFilter<ModuleSettingPart>("Site"));
 
             //Filters.Add(new TemplateFilterForPart<CodeSanookModuleSettingPart>(
             //    "CodeSanook", "Parts/CodeSanookModuleSetting", "CodeSanook"));
@@ -25,7 +23,7 @@ namespace Orchard.Users.Handlers {
             if (context.ContentItem.ContentType != "Site")
                 return;
             base.GetItemMetadata(context);
-            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("CodeSanook")));
+            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("CodeSanook Module")));
         }
     }
 }

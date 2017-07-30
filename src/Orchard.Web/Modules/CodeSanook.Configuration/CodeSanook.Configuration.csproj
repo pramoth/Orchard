@@ -96,11 +96,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Drivers\CodeSanookModuleSettingPartDriver.cs" />
-    <Compile Include="Handlers\CodeSanookModuleSettingPartHandler.cs" />
+    <Compile Include="Drivers\ModuleSettingPartDriver.cs" />
+    <Compile Include="Handlers\ModuleSettingPartHandler.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\CodeSanookModuleSettingPartRecord.cs" />
-    <Compile Include="Models\CodeSanookModuleSettingPart.cs" />
+    <Compile Include="Models\ModuleSettingPart.cs" />
+    <Compile Include="Models\ModuleSettingPartRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -126,7 +126,7 @@
     <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\CodeSanookModuleSetting.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\ModuleSetting.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
