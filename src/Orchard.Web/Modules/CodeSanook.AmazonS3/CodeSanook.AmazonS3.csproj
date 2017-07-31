@@ -55,6 +55,9 @@
     <Reference Include="AWSSDK.S3, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\AWSSDK.S3.3.3.8.2\lib\net45\AWSSDK.S3.dll</HintPath>
     </Reference>
+    <Reference Include="Flurl, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Flurl.2.4.0\lib\net40\Flurl.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -85,20 +88,15 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\AmazonS3Commands.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Services\AmazonS3StorageConfiguration.cs" />
+    <Compile Include="Services\AmazonS3Service.cs" />
     <Compile Include="Services\AmazonS3StorageFile.cs" />
     <Compile Include="Services\AmazonS3StorageFolder.cs" />
     <Compile Include="Services\AmazonS3StorageProvider.cs" />
-    <Compile Include="Models\AmazonS3SettingsRecord.cs" />
     <Compile Include="Services\AmazonS3StreamProxy.cs" />
-    <Compile Include="ViewModels\SettingsViewModel.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Admin\Settings.cshtml" />
+    <Compile Include="Services\IAmazonS3Service.cs" />
+    <Compile Include="Services\IAmazonS3StorageProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -111,13 +109,20 @@
       <Project>{2d1d92bb-4555-4cbe-8d0e-63563d6ce4c6}</Project>
       <Name>Orchard.Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CodeSanook.Configuration\CodeSanook.Configuration.csproj">
+      <Project>{55a5af31-438d-4712-b8b6-ee01327842ae}</Project>
+      <Name>CodeSanook.Configuration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Media\Orchard.Media.csproj">
       <Project>{d9a7b330-cd22-4da1-a95a-8de1982ad8eb}</Project>
       <Name>Orchard.Media</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\Facebook.Settings.cshtml" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Models\" />
+    <Folder Include="Views\EditorTemplates\Parts\" />
+    <Folder Include="Views\Parts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

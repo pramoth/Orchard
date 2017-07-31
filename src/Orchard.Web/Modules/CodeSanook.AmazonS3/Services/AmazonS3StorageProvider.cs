@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.UI.WebControls;
-using Amazon;
-using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.IO;
 using Amazon.S3.Model;
@@ -14,113 +12,83 @@ using Orchard.Environment.Extensions;
 using Orchard.FileSystems.Media;
 using PathUtils = System.IO.Path;
 using System.Text.RegularExpressions;
+using UrlHelper = Flurl.Url;
 
 namespace CodeSanook.AmazonS3.Services
 {
-    public interface IAmazonS3StorageProvider : IStorageProvider
-    {
-        //debug only
-        List<S3Object> ListObjects(string prefix, Func<S3Object, bool> filterfFunc = null);
-        void Test();
-        Stream GetObjectStream(string path);
-        void PublishFile(string path);
-    }
-
     [OrchardSuppressDependency("Orchard.FileSystems.Media.FileSystemStorageProvider")]
     public class AmazonS3StorageProvider : IAmazonS3StorageProvider, IStorageProvider
     {
-        private readonly IAmazonS3StorageConfiguration _amazonS3StorageConfiguration;
-        private readonly IAmazonS3 _client = null;
-        private readonly TransferUtility _transferUtility = null;
+        private IAmazonS3Service service;
 
-        public AmazonS3StorageProvider(IAmazonS3StorageConfiguration amazonS3StorageConfiguration)
+        public AmazonS3StorageProvider(IAmazonS3Service service)
         {
-            _amazonS3StorageConfiguration = amazonS3StorageConfiguration;
-            var cred = new BasicAWSCredentials(_amazonS3StorageConfiguration.AWSAccessKey, _amazonS3StorageConfiguration.AWSSecretKey);
-            //TODO: aws region to config
-            _client = new AmazonS3Client(cred, RegionEndpoint.APSoutheast1);
-            var config = new TransferUtilityConfig();
-            _transferUtility = new TransferUtility(_client, config);
-        }
-
-        public void Test()
-        {
-            /*
-            var x = "woof/bubu/x";
-            var dir = new S3DirectoryInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, "a/b");
-            dir.Create();
-            Console.WriteLine("Name: " + dir.Name + ", FullName: " + dir.FullName);
-
-            
-            var dir2 = new S3DirectoryInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, "1\\2");
-            dir2.Create();
-            Console.WriteLine("Name: " + dir2.Name + ", FullName: " + dir2.FullName);
-            var file = new S3FileInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, "1\\2\\t.txt");
-            using (file.Create()) { }
-            Console.WriteLine("Name: {0}, FullName: {1}, DirName: {2}", file.Name, file.FullName, file.DirectoryName);
-            var file2 = new S3FileInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, "a/b/t2.txt");
-
-            using (file2.Create()) { }
-            Console.WriteLine("Name: {0}, FullName: {1}, DirName: {2}", file2.Name, file2.FullName, file2.DirectoryName);
-            =*/
-            using (var fsFileStream = File.OpenRead(@"E:\al\pics\adventure_time\x.jpg"))
-            {
-                var a3File = new S3FileInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, @"test\x2.jpg");
-                using (a3File.Create()) { }
-
-                using (var outStream = a3File.OpenWrite())
-                {
-                    fsFileStream.CopyTo(outStream);
-                }
-                PublishFile(a3File.FullName);
-            }
+            this.service = service;
         }
 
         public bool FileExists(string path)
         {
-            path = CleanPath(path);
-            var file = new S3FileInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, path);
-            return file.Exists;
+            var s3File = GetS3File(path);
+            return s3File.Exists;
         }
 
         public string GetPublicUrl(string path)
         {
             path = CleanPath(path);
-            return
-                string.Format("{0}{1}/{2}", _amazonS3StorageConfiguration.AWSS3PublicUrl,
-                    _amazonS3StorageConfiguration.AWSFileBucket,
-                    path.Replace("\\", "/"));
+            return UrlHelper.Combine(
+                service.Setting.AwsS3PublicUrl,
+                service.Setting.AwsS3BucketName,
+                path.Replace("\\", "/"));
         }
 
         public string GetStoragePath(string url)
         {
-            var rootPath = string.Format("{0}{1}",
-                _amazonS3StorageConfiguration.AWSS3PublicUrl,
-                _amazonS3StorageConfiguration.AWSFileBucket);
+            var rootPath = UrlHelper.Combine(
+                service.Setting.AwsS3PublicUrl,
+                service.Setting.AwsS3BucketName);
             if (string.IsNullOrWhiteSpace(url) || url.Length < rootPath.Length)
+            {
                 return rootPath;
+            }
 
             return url.Substring(rootPath.Length);
         }
 
         public IStorageFile GetFile(string path)
         {
+            var s3File = GetS3File(path);
+            return new AmazonS3StorageFile(s3File, this);
+        }
+
+        private S3FileInfo GetS3File(string path)
+        {
             path = CleanPath(path);
-            var file = new S3FileInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, path);
-            return new AmazonS3StorageFile(file, this);
+            var file = new S3FileInfo(
+                service.S3Clicent,
+                service.Setting.AwsS3BucketName,
+                path);
+            return file;
         }
 
         public static string CleanPath(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
                 return string.Empty;
-
             path = Regex.Replace(path, @"^[^:]+\:", "");
             path = path.Replace("/", "\\");
             path = Regex.Replace(path, @"^[\\]+", "");
 
             return path;
         }
+
+        //private string CleanFolderPath(string path)
+        //{
+        //    path = CleanPath(path);
+        //    path = Regex.Replace(path, @"[\\]$", "") + "\\";
+        //    if (path == "\\")
+        //        return "";
+        //    return path;
+        //}
 
         public static string PathToKey(string path)
         {
@@ -132,21 +100,10 @@ namespace CodeSanook.AmazonS3.Services
 
         public IEnumerable<IStorageFile> ListFiles(string path)
         {
-            path = CleanPath(path);
-            var dir = new S3DirectoryInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, path);
-            return dir.GetFiles().Where(x => !x.Name.EndsWith("_$folder$")).Select(x => new AmazonS3StorageFile(x, this)).ToList();
+            var dir = GetDirectory(path);
+            return dir.GetFiles().Where(x => !x.Name.EndsWith("_$folder$"))
+                .Select(x => new AmazonS3StorageFile(x, this)).ToList();
         }
-
-        private string CleanFolderPath(string path)
-        {
-            path = CleanPath(path);
-            path = Regex.Replace(path, @"[\\]$", "") + "\\";
-            if (path == "\\")
-                return "";
-            return path;
-
-        }
-
         private string GetFolderKey(string path)
         {
             path = CleanPath(path);
@@ -157,24 +114,22 @@ namespace CodeSanook.AmazonS3.Services
 
         public bool FolderExists(string path)
         {
-            path = CleanPath(path);
-            var dir = new S3DirectoryInfo(_client, path);
+            var dir = GetDirectory(path);
             return dir.Exists;
         }
 
         public IEnumerable<IStorageFolder> ListFolders(string path)
         {
-            path = CleanPath(path);
-            var dir = new S3DirectoryInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, path);
-            return dir.GetDirectories("*", SearchOption.TopDirectoryOnly).Select(x => new AmazonS3StorageFolder(x)).ToList();
+            var dir = GetDirectory(path);
+            return dir.GetDirectories("*", SearchOption.TopDirectoryOnly)
+                .Select(x => new AmazonS3StorageFolder(x)).ToList();
         }
 
         public bool TryCreateFolder(string path)
         {
             try
             {
-                path = CleanPath(path);
-                var dir = new S3DirectoryInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, path);
+                var dir = GetDirectory(path);
                 dir.Create();
             }
             catch
@@ -186,48 +141,54 @@ namespace CodeSanook.AmazonS3.Services
 
         public void CreateFolder(string path)
         {
-            path = CleanPath(path);
-            var dir = new S3DirectoryInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, path);
+            var dir = GetDirectory(path);
             dir.Create();
         }
 
         public void DeleteFolder(string path)
         {
-            path = CleanPath(path);
-            var dir = new S3DirectoryInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, path);
+            var dir = GetDirectory(path);
             dir.Delete();
+        }
+
+        private S3DirectoryInfo GetDirectory(string path)
+        {
+            path = CleanPath(path);
+            var dir = new S3DirectoryInfo(
+                service.S3Clicent,
+                service.Setting.AwsS3BucketName,
+                path);
+            return dir;
         }
 
         public void RenameFolder(string oldPath, string newPath)
         {
             oldPath = CleanPath(oldPath);
             newPath = CleanPath(newPath);
-            var oldDir = new S3DirectoryInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, oldPath);
-            var newDir = new S3DirectoryInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, newPath);
+            var oldDir = GetDirectory(oldPath);
+            var newDir = GetDirectory(newPath);
             oldDir.MoveToLocal(newPath);
         }
 
         public void DeleteFile(string path)
         {
-            path = CleanPath(path);
-            var file = new S3FileInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, path);
+            var file = GetS3File(path);
             file.Delete();
-
         }
 
         public void RenameFile(string oldPath, string newPath)
         {
-            oldPath = CleanPath(oldPath);
+            var file = GetS3File(oldPath);
+
             newPath = CleanPath(newPath);
-            var file = new S3FileInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, oldPath);
             file.MoveToLocal(newPath);
         }
 
         public void CopyFile(string originalPath, string duplicatePath)
         {
-            originalPath = CleanPath(originalPath);
+            var file = GetS3File(originalPath);
+
             duplicatePath = CleanPath(duplicatePath);
-            var file = new S3FileInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, originalPath);
             file.CopyToLocal(duplicatePath);
         }
 
@@ -235,19 +196,17 @@ namespace CodeSanook.AmazonS3.Services
         {
             var key = PathToKey(path);
             Console.WriteLine("Publish key:" + key);
-            _client.PutACL(new PutACLRequest
+            service.S3Clicent.PutACL(new PutACLRequest
             {
-                BucketName = _amazonS3StorageConfiguration.AWSFileBucket,
+                BucketName = service.Setting.AwsS3BucketName,
                 Key = key,
                 CannedACL = S3CannedACL.PublicRead
             });
         }
 
-
         public IStorageFile CreateFile(string path)
         {
-            path = CleanPath(path);
-            var file = new S3FileInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, path);
+            var file = GetS3File(path);
             using (file.Create()) { }
             PublishFile(path);
             return new AmazonS3StorageFile(file, this);
@@ -270,7 +229,7 @@ namespace CodeSanook.AmazonS3.Services
         public void SaveStream(string path, Stream inputStream)
         {
             path = CleanPath(path);
-            var file = new S3FileInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, path);
+            var file = GetS3File(path);
             var isNew = !file.Exists;
             using (var stream = file.Exists ? file.OpenWrite() : file.Create())
             {
@@ -300,14 +259,14 @@ namespace CodeSanook.AmazonS3.Services
                 List<S3Object> result = new List<S3Object>();
                 ListObjectsRequest request = new ListObjectsRequest
                 {
-                    BucketName = _amazonS3StorageConfiguration.AWSFileBucket,
+                    BucketName = service.Setting.AwsS3BucketName,
                     Prefix = prefix,
                     MaxKeys = 1000
                 };
 
                 do
                 {
-                    ListObjectsResponse response = _client.ListObjects(request);
+                    ListObjectsResponse response = service.S3Clicent.ListObjects(request);
                     result.AddRange(response.S3Objects.Where(x => filterfFunc(x)));
 
                     if (response.IsTruncated && response.S3Objects.Any())
@@ -331,32 +290,27 @@ namespace CodeSanook.AmazonS3.Services
 
         public Stream GetObjectStream(string path)
         {
-            path = CleanPath(path);
-            var file = new S3FileInfo(_client, _amazonS3StorageConfiguration.AWSFileBucket, path);
-
+            var file = GetS3File(path);
             return file.OpenRead();
-            //return Download(path);
         }
 
         private Stream Download(string key)
         {
-            var stream = _transferUtility.OpenStream(new TransferUtilityOpenStreamRequest()
+            var stream = service.TransferUtility.OpenStream(new TransferUtilityOpenStreamRequest()
             {
-                BucketName = _amazonS3StorageConfiguration.AWSFileBucket,
+                BucketName = service.Setting.AwsS3BucketName,
                 Key = key,
             });
             return stream;
         }
 
-
         private bool Upload(Stream stream, string fileKey, bool asPublic = false, bool closeStream = false)
         {
-
             try
             {
                 var request = new TransferUtilityUploadRequest()
                 {
-                    BucketName = _amazonS3StorageConfiguration.AWSFileBucket,
+                    BucketName = service.Setting.AwsS3BucketName,
                     Key = fileKey,
                     InputStream = stream,
                     AutoCloseStream = closeStream,
@@ -366,7 +320,8 @@ namespace CodeSanook.AmazonS3.Services
                 {
                     request.CannedACL = S3CannedACL.PublicRead;
                 }
-                _transferUtility.Upload(request);
+
+               service.TransferUtility.Upload(request);
                 if (stream.CanSeek)
                 {
                     stream.Seek(0, SeekOrigin.Begin);
