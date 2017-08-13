@@ -7,11 +7,21 @@ using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace CodeSanook.Comment {
-    public class Migrations : DataMigrationImpl {
+namespace CodeSanook.Comment
+{
+    public class Migrations : DataMigrationImpl
+    {
+        public int Create()
+        {
+            SchemaBuilder.CreateTable("CommentPartRecord", config =>
+            config.ContentPartRecord()
+            .Column<string>("CommentBody")
+            .Column<DateTime>("CreatedUtcDate")
+            .Column<DateTime>("LastUpdatedUtcDate"));
 
-        public int Create() {
-
+            ContentDefinitionManager.AlterTypeDefinition("BlogPost", cfg =>
+                cfg.WithPart("CommentContainerPart")
+            );
 
             return 1;
         }

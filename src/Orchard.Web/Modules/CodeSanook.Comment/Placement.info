@@ -1,0 +1,16 @@
+﻿<Placement>
+  <!-- available display shapes -->
+  <!--
+        Parts_Comments
+        Parts_Comments_Count
+        Parts_Comments_Count_SummaryAdmin
+    -->
+
+  <Match DisplayType="Detail">
+    <Place Parts_CommentContainer="Content:10"/>
+  </Match>
+
+  <!--<Match ContentType="BlogPost">
+    <Place Parts_CommentContainer="Content:10"/>
+  </Match>-->
+</Placement>

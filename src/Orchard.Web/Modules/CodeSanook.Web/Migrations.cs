@@ -76,8 +76,8 @@ namespace CodeSanook.Web
                     .WithPart("BodyPart", partBuilder => partBuilder
                     //body part use this type to get a setting
                         .WithSetting("BodyTypePartSettings.Flavor", "markdown"))
-                     //.RemovePart("CommentsContainerPart")
-                     .RemovePart("CommentsPart") //defined in blog.recipe.xml
+                    .RemovePart("CommentsContainerPart")
+                    .RemovePart("CommentsPart") //defined in blog.recipe.xml
             );
 
             ContentDefinitionManager.AlterTypeDefinition("Blog",

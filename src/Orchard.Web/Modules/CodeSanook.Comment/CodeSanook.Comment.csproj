@@ -71,21 +71,18 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drivers\CommentContainerPartDriver.cs" />
+    <Compile Include="Handlers\CommentContainerPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\CommentPart.cs" />
     <Compile Include="Models\CommentPartRecord.cs" />
-    <Compile Include="Models\CommentsContainerPart.cs" />
+    <Compile Include="Models\CommentContainerPart.cs" />
     <Compile Include="Models\CommentSettingsPart.cs" />
-    <Compile Include="Models\CommentsPart.cs" />
-    <Compile Include="Models\CommentsPartRecord.cs" />
-    <Compile Include="Models\CommentStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets.json" />
     <Content Include="Assets\Styles.less" />
-    <Content Include="Styles\Styles.css" />
-    <Content Include="Styles\Styles.min.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -105,7 +102,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\CommentContainer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
