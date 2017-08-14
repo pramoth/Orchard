@@ -1,17 +1,12 @@
 ﻿<Placement>
-  <!-- available display shapes -->
-  <!--
-        Parts_Comments
-        Parts_Comments_Count
-        Parts_Comments_Count_SummaryAdmin
-    -->
+  <Place Parts_Comment_Edit="Content:10"/>
 
   <Match DisplayType="Detail">
     <Place Parts_CommentContainer="Content:10"/>
     <Place Parts_CommentForm="Content:10.2"/>
   </Match>
-
-  <!--<Match ContentType="BlogPost">
-    <Place Parts_CommentContainer="Content:10"/>
-  </Match>-->
+  
+  <Match ContentType="Comment">
+    <Place Content_SaveButton="-"/><!--Show default save button only on admin-->
+  </Match>
 </Placement>

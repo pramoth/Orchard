@@ -1,0 +1,5 @@
+﻿@model  CodeSanook.Comment.Models.CommentPart
+<div class="form-group">
+    @Html.LabelFor(m => m.CommentBody)
+    @Html.TextAreaFor(m => m.CommentBody, new { @class = "form-control", rows = "3" })
+</div>

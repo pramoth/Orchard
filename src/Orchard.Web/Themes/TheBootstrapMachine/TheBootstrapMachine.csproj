@@ -155,15 +155,10 @@
     <Content Include="Views\Parts.Title.Summary.cshtml" />
     <Content Include="Views\Parts.Common.Metadata.Summary.cshtml" />
     <Content Include="Views\Parts.Common.Metadata.cshtml" />
-    <Content Include="Views\Parts.Comments.Count.cshtml" />
-    <Content Include="Views\Parts.Comment.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts.Comment.cshtml" />
     <Content Include="Views\Register.cshtml" />
-    <Content Include="Views\CommentReplyButton.cshtml" />
     <Content Include="Views\Parts.Tags.ShowTags.Details.cshtml" />
     <Content Include="Views\Parts.Common.Body.cshtml" />
     <Content Include="Views\Orchard.Users\Account\ChangePassword.cshtml" />
-    <Content Include="Views\CommentText.cshtml" />
     <Content Include="Assets\bootstrap\alerts.less" />
     <Content Include="Assets\bootstrap\badges.less" />
     <Content Include="Assets\bootstrap\bootstrap.less" />
@@ -226,9 +221,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Wrapper-BlogPost.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts.ListOfComments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.Blogs.BlogArchives.cshtml" />
