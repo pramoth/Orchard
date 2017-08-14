@@ -1,10 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Data;
-using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
 namespace CodeSanook.Comment
@@ -23,7 +18,23 @@ namespace CodeSanook.Comment
                 cfg.WithPart("CommentContainerPart")
             );
 
+
+
             return 1;
         }
+
+
+        public int UpdateFrom1()
+        {
+            //create Comment type
+            ContentDefinitionManager.AlterTypeDefinition("Comment",
+                cfg => cfg
+                .WithPart("CommentPart")
+                .WithPart("CommonPart")
+                .RemovePart("IdentityPart")
+                );
+            return 2;
+        }
     }
+
 }

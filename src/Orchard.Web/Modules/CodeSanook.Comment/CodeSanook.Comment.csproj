@@ -71,8 +71,11 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Drivers\CommentContainerPartDriver.cs" />
+    <Compile Include="Drivers\CommentPartDriver.cs" />
     <Compile Include="Handlers\CommentContainerPartHandler.cs" />
+    <Compile Include="Handlers\CommentPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\CommentPart.cs" />
     <Compile Include="Models\CommentPartRecord.cs" />
@@ -100,9 +103,7 @@
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\Parts\CommentContainer.cshtml" />
   </ItemGroup>
@@ -110,6 +111,12 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\CommentForm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\CommentForm.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

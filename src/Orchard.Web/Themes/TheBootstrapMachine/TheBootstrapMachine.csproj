@@ -159,7 +159,6 @@
     <Content Include="Views\Parts.Comment.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.Comment.cshtml" />
     <Content Include="Views\Register.cshtml" />
-    <Content Include="Views\Parts.CommentForm.cshtml" />
     <Content Include="Views\CommentReplyButton.cshtml" />
     <Content Include="Views\Parts.Tags.ShowTags.Details.cshtml" />
     <Content Include="Views\Parts.Common.Body.cshtml" />
