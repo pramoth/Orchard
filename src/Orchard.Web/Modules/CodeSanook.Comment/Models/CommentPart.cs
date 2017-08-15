@@ -25,5 +25,12 @@ namespace CodeSanook.Comment.Models
             get { return Record.LastUpdatedUtcDate; }
             set { Record.LastUpdatedUtcDate = value; }
         }
+
+        public CommentContainerPartRecord CommentContainerPartRecord
+        {
+            get { return Record.CommentContainerPartRecord; }
+            set { Record.CommentContainerPartRecord = value; }
+        }
+
     }
 }

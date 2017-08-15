@@ -22,7 +22,6 @@ namespace CodeSanook.Comment.Drivers
             this.contentManager = contentManager;
         }
 
-
         protected override DriverResult Display(CommentContainerPart part, string displayType, dynamic shapeHelper)
         {
             var contentItem = part.ContentItem.Id;
@@ -30,6 +29,7 @@ namespace CodeSanook.Comment.Drivers
 
             var newComment = contentManager.New("Comment");
             var commentPart = newComment.As<CommentPart>();
+            //commentPart.CommentContainerPartRecord  = 
 
             var editorShape = contentManager.BuildEditor(newComment);
 
