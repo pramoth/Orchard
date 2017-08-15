@@ -24,12 +24,18 @@ namespace CodeSanook.Comment.Drivers
 
         protected override DriverResult Display(CommentContainerPart part, string displayType, dynamic shapeHelper)
         {
-            var contentItem = part.ContentItem.Id;
-            //todo find list of all comments for current content item  
+            var contentItemId = part.ContentItem.Id;
 
+            //todo find list of all comments for current content item  
             var newComment = contentManager.New("Comment");
             var commentPart = newComment.As<CommentPart>();
+            commentPart.ContentItemId = contentItemId;
+
             //commentPart.CommentContainerPartRecord  = 
+
+            //contentManager.Query<CommentPart, CommentPartRecord>()
+            //    .Where(c=>c.;
+
 
             var editorShape = contentManager.BuildEditor(newComment);
 

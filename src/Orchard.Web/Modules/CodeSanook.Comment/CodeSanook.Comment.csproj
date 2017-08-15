@@ -94,11 +94,9 @@
     <Compile Include="Handlers\CommentContainerPartHandler.cs" />
     <Compile Include="Handlers\CommentPartHandler.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\CommentContainerPartRecord.cs" />
     <Compile Include="Models\CommentPart.cs" />
     <Compile Include="Models\CommentPartRecord.cs" />
     <Compile Include="Models\CommentContainerPart.cs" />
-    <Compile Include="Models\CommentSettingsPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
