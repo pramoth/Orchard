@@ -68,8 +68,17 @@ namespace CodeSanook.Web
                 userRolesRepository.Create(userRolesPartRecord);
             }
 
-            EnableModules(new[] { "CodeSanook.AmazonS3", "Markdown", "CodeSanook.FacebookConnect" });
-            DisableModules(new[] { "Comments" });
+            EnableModules(new[]
+            {
+                "CodeSanook.Configuration",
+                "CodeSanook.AmazonS3",
+                "Markdown",
+                "CodeSanook.FacebookConnect"
+            });
+            DisableModules(new[] 
+            {
+                "Orchard.Comments",
+            });
 
             ContentDefinitionManager.AlterTypeDefinition("BlogPost",
                 cfg => cfg
