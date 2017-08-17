@@ -1,4 +1,24 @@
-﻿<h1>
-    comment container
-</h1>
-@Display(Model.CommentShape)
+﻿@using CodeSanook.Comment.Models;
+@using Orchard.ContentManagement;
+@using Orchard.Utility.Extensions;
+
+@using (Html.BeginFormAntiForgeryPost(
+    Url.Action("Create", "Comment",
+    new { Area = "CodeSanook.Comment",
+        ReturnUrl = Context.Request.ToUrlString() }), 
+    FormMethod.Post, new { @class = "comment-form" }))
+{
+
+    @Display(Model.CommentShape)
+
+    <button type="submit" class="btn btn-default">@T("Submit Comment")</button>
+}
+
+<h2>comment</h2>
+<ul>
+    @foreach (ContentItem comment in Model.CommentList)
+    {
+        var commentPart = comment.As<CommentPart>();
+        <li>@commentPart.CommentBody</li>
+    }
+</ul>

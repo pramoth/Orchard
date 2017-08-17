@@ -24,28 +24,31 @@ namespace CodeSanook.Comment.Drivers
 
         protected override DriverResult Display(CommentContainerPart part, string displayType, dynamic shapeHelper)
         {
-            var contentItemId = part.ContentItem.Id;
+            if (displayType == "Detail")
+            {
+                var contentItemId = part.ContentItem.Id;
+                var commentList = contentManager.Query<CommentPart, CommentPartRecord>()
+                     .Where(c => c.ContentItemId == contentItemId)
+                     .List()
+                     .Select(c => c.ContentItem)
+                     .ToList();
 
-            //todo find list of all comments for current content item  
-            var newComment = contentManager.New("Comment");
-            var commentPart = newComment.As<CommentPart>();
-            commentPart.ContentItemId = contentItemId;
+                var newComment = contentManager.New("Comment");
+                var commentPart = newComment.As<CommentPart>();
+                commentPart.ContentItemId = contentItemId;
 
-            //commentPart.CommentContainerPartRecord  = 
+                var commentShape = contentManager.BuildEditor(newComment);
+                var containerShape = ContentShape("Parts_CommentContainer",
+                      () => shapeHelper.Parts_CommentContainer(CommentShape: commentShape, CommentList: commentList));
 
-            //contentManager.Query<CommentPart, CommentPartRecord>()
-            //    .Where(c=>c.;
-
-
-            var commentShape = contentManager.BuildEditor(newComment);
-
-            //var formShape = ContentShape("Parts_CommentForm",
-            //    () => shapeHelper.Parts_CommentForm(EditorShape: editorShape));
-
-            var containerShape = ContentShape("Parts_CommentContainer",
-                  () => shapeHelper.Parts_CommentContainer(CommentShape: commentShape));
-
-            return Combined(containerShape);
+                return Combined(containerShape);
+            }
+            else
+            {
+                var summaryShape = ContentShape("Parts_CommentSummary",
+                    () => shapeHelper.Parts_Parts_CommentSummary());
+                return Combined(summaryShape);
+            }
         }
     }
 }

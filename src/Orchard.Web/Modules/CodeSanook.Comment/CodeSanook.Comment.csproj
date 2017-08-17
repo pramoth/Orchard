@@ -131,9 +131,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\CommentForm.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Comment.cshtml" />
   </ItemGroup>
   <PropertyGroup>
