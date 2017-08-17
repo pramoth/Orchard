@@ -37,15 +37,15 @@ namespace CodeSanook.Comment.Drivers
             //    .Where(c=>c.;
 
 
-            var editorShape = contentManager.BuildEditor(newComment);
+            var commentShape = contentManager.BuildEditor(newComment);
 
-            var formShape = ContentShape("Parts_CommentForm",
-                () => shapeHelper.Parts_CommentForm(EditorShape: editorShape));
+            //var formShape = ContentShape("Parts_CommentForm",
+            //    () => shapeHelper.Parts_CommentForm(EditorShape: editorShape));
 
             var containerShape = ContentShape("Parts_CommentContainer",
-                  () => shapeHelper.Parts_CommentContainer(Model: part));
+                  () => shapeHelper.Parts_CommentContainer(CommentShape: commentShape));
 
-            return Combined(containerShape, formShape);
+            return Combined(containerShape);
         }
     }
 }

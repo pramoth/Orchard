@@ -1,9 +1,8 @@
 ﻿<Placement>
-  <Place Parts_Comment_Edit="Content:10"/>
+  <Place Parts_Comment_Edit="Meta:10"/>
 
   <Match DisplayType="Detail">
-    <Place Parts_CommentContainer="Content:10"/>
-    <Place Parts_CommentForm="Content:10.2"/>
+    <Place Parts_CommentContainer="Meta:10"/>
   </Match>
   
   <Match ContentType="Comment">
