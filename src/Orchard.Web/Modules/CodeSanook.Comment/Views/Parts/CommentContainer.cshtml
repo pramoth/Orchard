@@ -1,28 +1,121 @@
-﻿@using CodeSanook.Comment.Models;
+﻿<style type="text/css">
+    /*font Awesome http://fontawesome.io*/
+    @@import url(//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css);
+    /*Comment List styles*/
+    .comment-list .row {
+        margin-bottom: 0px;
+    }
+
+    .comment-list .panel .panel-heading {
+        padding: 4px 15px;
+        border: none;
+        /*Panel-heading border radius*/
+        border-top-right-radius: 0px;
+        top: 1px;
+    }
+
+    .comment-list .panel {
+        min-height: 200px;
+        position: relative;
+    }
+
+    .arrow:before {
+        content: "";
+        border-top: 20px solid transparent;
+        border-bottom: 20px solid transparent;
+        border-right: 20px solid #DDD;
+        position: absolute;
+        left: -20px;
+        top: 20px;
+    }
+
+    .arrow:after {
+        content: "";
+        border-top: 19px solid transparent;
+        border-right: 19px solid #FFF;
+        border-bottom: 19px solid transparent;
+        position: absolute;
+        left: -19px;
+        top: 21px;
+    }
+
+    .comment-list .panel .panel-heading .panel-body {
+        padding-top: 6px;
+    }
+
+    .comment-list figcaption {
+        /*For wrapping text in thumbnail*/
+        word-wrap: break-word;
+    }
+
+    .comment-list .comment-post {
+        margin-top: 6px;
+    }
+</style>
+
+
+
+
+
+@using CodeSanook.Comment.Models;
 @using Orchard.ContentManagement;
 @using Orchard.Utility.Extensions;
 @using Orchard.Core.Common.Models;
 @using System.Linq;
-@{ 
+@{
     var commentList = (List<ContentItem>)Model.CommentList;
 }
- 
-@using (Html.BeginFormAntiForgeryPost(
-    Url.Action("Create", "Comment",
-    new { Area = "CodeSanook.Comment",
-        ReturnUrl = Context.Request.ToUrlString() }), 
-    FormMethod.Post, new { @class = "comment-form" }))
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Comment",
+                            new
+                            {
+                                Area = "CodeSanook.Comment",
+                                ReturnUrl = Context.Request.ToUrlString()
+                            }),
+                                FormMethod.Post, new { @class = "comment-form" }))
 {
     @Display(Model.CommentShape)
     <button type="submit" class="btn btn-default">@T("Submit Comment")</button>
 }
 
 <h2> @commentList.Count() comments</h2>
-<ul>
-    @foreach (ContentItem comment in commentList)
-    {
-        var commentPart = comment.As<CommentPart>();
-        var commonPart = comment.As<CommonPart>();
-        <li>by @commonPart.Owner.UserName :@commentPart.CommentBody</li>
-    }
-</ul>
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="page-header">Comments</h2>
+        <section class="comment-list">
+
+            @foreach (ContentItem comment in commentList)
+            {
+
+                var commentPart = comment.As<CommentPart>();
+                var commonPart = comment.As<CommonPart>();
+                <article class="row">
+
+                    <div class="col-md-2 col-sm-2 hidden-xs">
+                        <figure class="thumbnail">
+                            <img class="img-responsive"
+                                 src="http://www.keita-gaming.com/assets/profile/default-avatar-c5d8ec086224cb6fc4e395f4ba3018c2.jpg" />
+                            <figcaption class="text-center">@commonPart.Owner.UserName</figcaption>
+                        </figure>
+                    </div>
+
+                    <div class="col-md-10 col-sm-10">
+                        <div class="panel panel-default arrow">
+                            <div class="panel-body">
+                                <header class="text-left">
+                                    <div class="comment-user"><i class="fa fa-user"></i>@commonPart.Owner.UserName</div>
+                                    <time class="comment-date" datetime="16-12-2014 01:05"><i class="fa fa-clock-o"></i> Dec 16, 2014</time>
+                                </header>
+                                <div class="comment-post">
+                                    <p>
+                                        @commentPart.CommentBody 
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            }
+        </section>
+    </div>
+</div>
