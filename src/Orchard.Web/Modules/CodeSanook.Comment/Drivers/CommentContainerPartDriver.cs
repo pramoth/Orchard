@@ -24,14 +24,25 @@ namespace CodeSanook.Comment.Drivers
 
         protected override DriverResult Display(CommentContainerPart part, string displayType, dynamic shapeHelper)
         {
+            var contentItemId = part.ContentItem.Id;
+
             if (displayType == "Detail")
             {
-                var contentItemId = part.ContentItem.Id;
-                var commentList = contentManager.Query<CommentPart, CommentPartRecord>()
+
+                var commentCount = contentManager.Query<CommentPart, CommentPartRecord>()
                      .Where(c => c.ContentItemId == contentItemId)
                      .List()
-                     .Select(c => c.ContentItem)
-                     .ToList();
+                     .ToList()
+                     .Count();
+                var commentList = new List<ContentItem>();
+                if (commentCount > 0)
+                {
+                    commentList = contentManager.Query<CommentPart, CommentPartRecord>()
+                        .Where(c => c.ContentItemId == contentItemId)
+                        .List()
+                        .Select(c => c.ContentItem)
+                        .ToList();
+                }
 
                 var newComment = contentManager.New("Comment");
                 var commentPart = newComment.As<CommentPart>();
@@ -39,7 +50,9 @@ namespace CodeSanook.Comment.Drivers
 
                 var commentShape = contentManager.BuildEditor(newComment);
                 var containerShape = ContentShape("Parts_CommentContainer",
-                      () => shapeHelper.Parts_CommentContainer(CommentShape: commentShape, CommentList: commentList));
+                      () => shapeHelper.Parts_CommentContainer(
+                          CommentShape: commentShape,
+                          CommentList: commentList));
 
                 return Combined(containerShape);
             }
