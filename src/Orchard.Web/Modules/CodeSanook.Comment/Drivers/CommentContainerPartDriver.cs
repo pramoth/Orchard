@@ -1,6 +1,10 @@
 ﻿using CodeSanook.Comment.Models;
+using CodeSanook.FacebookConnect.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.Common.Models;
+using Orchard.Security;
+using Orchard.Users.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +15,17 @@ namespace CodeSanook.Comment.Drivers
     public class CommentContainerPartDriver : ContentPartDriver<CommentContainerPart>
     {
         private IContentManager contentManager;
+        private readonly IAuthenticationService auth;
 
         protected override string Prefix
         {
             get { return "CommentContainerPart"; }
         }
 
-        public CommentContainerPartDriver(IContentManager contentManager)
+        public CommentContainerPartDriver(IContentManager contentManager, IAuthenticationService auth)
         {
             this.contentManager = contentManager;
+            this.auth = auth;
         }
 
         protected override DriverResult Display(CommentContainerPart part, string displayType, dynamic shapeHelper)
@@ -29,20 +35,25 @@ namespace CodeSanook.Comment.Drivers
             if (displayType == "Detail")
             {
 
-                var commentCount = contentManager.Query<CommentPart, CommentPartRecord>()
-                     .Where(c => c.ContentItemId == contentItemId)
+                var user = auth.GetAuthenticatedUser();
+                var commentList = contentManager.HqlQuery().ForType("Comment")
+                     .Where(alias => alias.ContentPartRecord<CommentPartRecord>(), s => s.Eq("ContentItemId", contentItemId))
                      .List()
-                     .ToList()
-                     .Count();
-                var commentList = new List<ContentItem>();
-                if (commentCount > 0)
-                {
-                    commentList = contentManager.Query<CommentPart, CommentPartRecord>()
-                        .Where(c => c.ContentItemId == contentItemId)
-                        .List()
-                        .Select(c => c.ContentItem)
-                        .ToList();
-                }
+                     .ToList();
+
+                var userIds = commentList.Select(c => c.As<CommonPart>().Owner.Id).ToArray();
+                var userList = contentManager.HqlQuery().ForType("User")
+                    .Where(alias => alias.ContentPartRecord<FacebookUserPartRecord>(),
+                    q => q.In("Id", userIds))
+                    .List()
+                    .ToList();
+
+                //to do create view model and hide facebook part
+                var viewModel = (from c in commentList
+                                 join u in userList 
+                                 on (c.As<CommonPart>().Owner.Id) equals u.Id
+                                 select u).ToList();
+
 
                 var newComment = contentManager.New("Comment");
                 var commentPart = newComment.As<CommentPart>();

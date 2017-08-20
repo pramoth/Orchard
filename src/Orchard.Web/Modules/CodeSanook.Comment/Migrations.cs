@@ -28,5 +28,13 @@ namespace CodeSanook.Comment
                     .RemovePart("IdentityPart"));
             return 1;
         }
+
+        public int UpdateFrom1()
+        {
+            ContentDefinitionManager.AlterTypeDefinition("Comment",
+                cfg => cfg
+                .WithPart("FacebookUserPart"));
+            return 2;
+        }
     }
 }

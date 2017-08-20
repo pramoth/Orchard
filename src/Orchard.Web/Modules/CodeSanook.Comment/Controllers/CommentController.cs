@@ -1,9 +1,5 @@
 ﻿using Orchard;
-using Orchard.Core.Contents;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Security;
@@ -11,6 +7,8 @@ using Orchard.UI.Notify;
 using Orchard.ContentManagement;
 using CodeSanook.Comment.Models;
 using Orchard.Localization;
+using CodeSanook.FacebookConnect.Models;
+using AutoMapper;
 
 namespace CodeSanook.Comment.Controllers
 {
@@ -50,11 +48,12 @@ namespace CodeSanook.Comment.Controllers
             }
 
             //new comment item and get comment part
-            var comment = contentManager.New<CommentPart>("Comment");
+            var comment = contentManager.New("Comment");
+            var commentPart = comment.As<CommentPart>();
+            var facebookUserPartForComment = comment.As<FacebookUserPart>();
 
             //bind data
-            var editorShape = contentManager.UpdateEditor(comment, this);
-
+            var editorShape = contentManager.UpdateEditor(commentPart, this);
             if (!ModelState.IsValidField("Comments.CommentBody"))
             {
                 notifier.Error(T("Comment is mandatory"));
@@ -62,8 +61,12 @@ namespace CodeSanook.Comment.Controllers
 
             if (ModelState.IsValid)
             {
+                var currentFacebookUserPart = user.ContentItem.As<FacebookUserPart>();
+                Mapper.Initialize(cfg => cfg.CreateMap<FacebookUserPart, FacebookUserPart>());
+                Mapper.Map<FacebookUserPart, FacebookUserPart>(currentFacebookUserPart, facebookUserPartForComment);
+
+                facebookUserPartForComment = comment.As<FacebookUserPart>();
                 contentManager.Create(comment);
-                //var commentPart = commentItem.As<CommentPart>();
             }
 
             return this.RedirectLocal(returnUrl, "~/");
