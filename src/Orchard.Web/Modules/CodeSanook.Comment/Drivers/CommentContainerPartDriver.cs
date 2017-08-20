@@ -36,23 +36,28 @@ namespace CodeSanook.Comment.Drivers
             {
 
                 var user = auth.GetAuthenticatedUser();
-                var commentList = contentManager.HqlQuery().ForType("Comment")
+                var comments = contentManager.HqlQuery().ForType("Comment")
                      .Where(alias => alias.ContentPartRecord<CommentPartRecord>(), s => s.Eq("ContentItemId", contentItemId))
                      .List()
                      .ToList();
 
-                var userIds = commentList.Select(c => c.As<CommonPart>().Owner.Id).ToArray();
-                var userList = contentManager.HqlQuery().ForType("User")
+                var userIds = comments.Select(c => c.As<CommonPart>().Owner.Id).ToArray();
+                var users = contentManager.HqlQuery().ForType("User")
                     .Where(alias => alias.ContentPartRecord<FacebookUserPartRecord>(),
                     q => q.In("Id", userIds))
+                    .Include()
                     .List()
                     .ToList();
 
                 //to do create view model and hide facebook part
-                var viewModel = (from c in commentList
-                                 join u in userList 
-                                 on (c.As<CommonPart>().Owner.Id) equals u.Id
-                                 select u).ToList();
+                var commentList = (from c in comments
+                                   join u in users
+                                   on (c.As<CommonPart>().Owner.Id) equals u.Id
+                                   select new CommentItemViewModel()
+                                   {
+                                       Comment = c,
+                                       User = u
+                                   }).ToList();
 
 
                 var newComment = contentManager.New("Comment");
