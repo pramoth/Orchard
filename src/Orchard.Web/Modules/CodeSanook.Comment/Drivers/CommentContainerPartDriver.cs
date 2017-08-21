@@ -34,10 +34,10 @@ namespace CodeSanook.Comment.Drivers
 
             if (displayType == "Detail")
             {
-
                 var user = auth.GetAuthenticatedUser();
                 var comments = contentManager.HqlQuery().ForType("Comment")
                      .Where(alias => alias.ContentPartRecord<CommentPartRecord>(), s => s.Eq("ContentItemId", contentItemId))
+                     .OrderBy(alias => alias.ContentPartRecord<CommonPartRecord>(), order=> order.Desc("CreatedUtc"))
                      .List()
                      .ToList();
 
@@ -45,7 +45,6 @@ namespace CodeSanook.Comment.Drivers
                 var users = contentManager.HqlQuery().ForType("User")
                     .Where(alias => alias.ContentPartRecord<FacebookUserPartRecord>(),
                     q => q.In("Id", userIds))
-                    .Include()
                     .List()
                     .ToList();
 
