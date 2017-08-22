@@ -31,25 +31,28 @@ namespace CodeSanook.Comment.Drivers
         protected override DriverResult Display(CommentContainerPart part, string displayType, dynamic shapeHelper)
         {
             var contentItemId = part.ContentItem.Id;
+            var user = auth.GetAuthenticatedUser();
 
             if (displayType == "Detail")
             {
-                var user = auth.GetAuthenticatedUser();
+                var commentList = new List<CommentItemViewModel>();
                 var comments = contentManager.HqlQuery().ForType("Comment")
                      .Where(alias => alias.ContentPartRecord<CommentPartRecord>(), s => s.Eq("ContentItemId", contentItemId))
-                     .OrderBy(alias => alias.ContentPartRecord<CommonPartRecord>(), order=> order.Desc("CreatedUtc"))
+                     .OrderBy(alias => alias.ContentPartRecord<CommonPartRecord>(), order => order.Desc("CreatedUtc"))
                      .List()
                      .ToList();
 
-                var userIds = comments.Select(c => c.As<CommonPart>().Owner.Id).ToArray();
-                var users = contentManager.HqlQuery().ForType("User")
-                    .Where(alias => alias.ContentPartRecord<FacebookUserPartRecord>(),
-                    q => q.In("Id", userIds))
-                    .List()
-                    .ToList();
+                if (comments.Any())
+                {
+                    var userIds = comments.Select(c => c.As<CommonPart>().Owner.Id).ToArray();
+                    var users = contentManager.HqlQuery().ForType("User")
+                       .Where(alias => alias.ContentPartRecord<FacebookUserPartRecord>(),
+                       q => q.In("Id", userIds))
+                       .List()
+                       .ToList();
 
-                //to do create view model and hide facebook part
-                var commentList = (from c in comments
+                    //to do create view model and hide facebook part
+                    commentList = (from c in comments
                                    join u in users
                                    on (c.As<CommonPart>().Owner.Id) equals u.Id
                                    select new CommentItemViewModel()
@@ -57,7 +60,7 @@ namespace CodeSanook.Comment.Drivers
                                        Comment = c,
                                        User = u
                                    }).ToList();
-
+                }
 
                 var newComment = contentManager.New("Comment");
                 var commentPart = newComment.As<CommentPart>();

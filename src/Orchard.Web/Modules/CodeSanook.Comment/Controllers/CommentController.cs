@@ -7,8 +7,6 @@ using Orchard.UI.Notify;
 using Orchard.ContentManagement;
 using CodeSanook.Comment.Models;
 using Orchard.Localization;
-using CodeSanook.FacebookConnect.Models;
-using AutoMapper;
 
 namespace CodeSanook.Comment.Controllers
 {
@@ -50,7 +48,6 @@ namespace CodeSanook.Comment.Controllers
             //new comment item and get comment part
             var comment = contentManager.New("Comment");
             var commentPart = comment.As<CommentPart>();
-            var facebookUserPartForComment = comment.As<FacebookUserPart>();
 
             //bind data
             var editorShape = contentManager.UpdateEditor(commentPart, this);
@@ -61,11 +58,6 @@ namespace CodeSanook.Comment.Controllers
 
             if (ModelState.IsValid)
             {
-                var currentFacebookUserPart = user.ContentItem.As<FacebookUserPart>();
-                Mapper.Initialize(cfg => cfg.CreateMap<FacebookUserPart, FacebookUserPart>());
-                Mapper.Map<FacebookUserPart, FacebookUserPart>(currentFacebookUserPart, facebookUserPartForComment);
-
-                facebookUserPartForComment = comment.As<FacebookUserPart>();
                 contentManager.Create(comment);
             }
 

@@ -16,16 +16,17 @@ namespace CodeSanook.Comment
                     .Column<DateTime>("LastUpdatedUtcDate")
                     .Column<int>("ContentItemId "));
 
-            ContentDefinitionManager.AlterTypeDefinition("BlogPost",
-                cfg => cfg.WithPart("CommentContainerPart")
-            );
-
             //create Comment type
             ContentDefinitionManager.AlterTypeDefinition("Comment",
                 cfg => cfg
                     .WithPart("CommonPart")
                     .WithPart("CommentPart")
                     .RemovePart("IdentityPart"));
+
+            ContentDefinitionManager.AlterTypeDefinition("BlogPost",
+                cfg => cfg.WithPart("CommentContainerPart")
+            );
+
             return 1;
         }
     }
