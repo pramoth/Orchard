@@ -70,13 +70,10 @@
     var comments = (List<CommentItemViewModel>)Model.CommentList;
 }
 
-@using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Comment",
-                                                                                                                            new
-                                                                                                                            {
-                                                                                                                                Area = "CodeSanook.Comment",
-                                                                                                                                ReturnUrl = Context.Request.ToUrlString()
-                                                                                                                            }),
-                                                                                                                                FormMethod.Post, new { @class = "comment-form" }))
+@using (Html.BeginFormAntiForgeryPost(
+                            Url.Action("Create", "Comment",
+                            new { Area = "CodeSanook.Comment", ReturnUrl = Context.Request.ToUrlString() }),
+                            FormMethod.Post, new { @class = "comment-form" }))
 {
     @Display(Model.CommentShape)
     <div class="row">
