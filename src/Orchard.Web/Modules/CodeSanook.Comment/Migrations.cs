@@ -1,6 +1,7 @@
 using System;
-using Orchard.ContentManagement.MetaData;
 using Orchard.Data.Migration;
+using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Contents.Extensions;
 
 namespace CodeSanook.Comment
 {
@@ -14,14 +15,18 @@ namespace CodeSanook.Comment
                     .Column<string>("CommentBody")
                     .Column<DateTime>("CreatedUtcDate")
                     .Column<DateTime>("LastUpdatedUtcDate")
-                    .Column<int>("ContentItemId "));
+                    .Column<int>("ContentItemId ")
+                    );
+
 
             //create Comment type
             ContentDefinitionManager.AlterTypeDefinition("Comment",
                 cfg => cfg
                     .WithPart("CommonPart")
                     .WithPart("CommentPart")
-                    .RemovePart("IdentityPart"));
+                    .RemovePart("IdentityPart")
+                    .Listable()
+                    );
 
             ContentDefinitionManager.AlterTypeDefinition("BlogPost",
                 cfg => cfg.WithPart("CommentContainerPart")

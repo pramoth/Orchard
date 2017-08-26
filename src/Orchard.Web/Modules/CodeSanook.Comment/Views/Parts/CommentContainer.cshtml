@@ -3,91 +3,42 @@
 @using Orchard.Utility.Extensions;
 @using Orchard.Core.Common.Models;
 @using CodeSanook.FacebookConnect.Models;
-<style type="text/css">
-    /*font Awesome http://fontawesome.io*/
-    @@import url(//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css);
-    /*Comment List styles*/
-
-    .comment-block {
-        margin-top: 50px;
-    }
-
-    .comment-list .row {
-        margin-bottom: 0px;
-    }
-
-    .comment-list .panel .panel-heading {
-        padding: 4px 15px;
-        border: none;
-        /*Panel-heading border radius*/
-        border-top-right-radius: 0px;
-        top: 1px;
-    }
-
-    .comment-list .panel {
-        min-height: 200px;
-        position: relative;
-    }
-
-    @@media (min-width:768px) {
-
-        .arrow:before {
-            content: "";
-            border-top: 20px solid transparent;
-            border-bottom: 20px solid transparent;
-            border-right: 20px solid #DDD;
-            position: absolute;
-            left: -20px;
-            top: 20px;
-        }
-
-        .arrow:after {
-            content: "";
-            border-top: 19px solid transparent;
-            border-right: 19px solid #FFF;
-            border-bottom: 19px solid transparent;
-            position: absolute;
-            left: -19px;
-            top: 21px;
-        }
-    }
-
-    .comment-list .panel .panel-heading .panel-body {
-        padding-top: 6px;
-    }
-
-    .comment-list figcaption {
-        /*For wrapping text in thumbnail*/
-        word-wrap: break-word;
-    }
-
-    .comment-list .comment-post {
-        margin-top: 6px;
-    }
-</style>
-
 @{
-    var comments = (List<CommentItemViewModel>)Model.CommentList;
-}
+    Style.Require("Bootstrap").AtHead();
+    Style.Require("FontAwesome").AtHead();
+    Style.Require("CommentStyle").AtHead();
 
-@using (Html.BeginFormAntiForgeryPost(
-                            Url.Action("Create", "Comment",
-                            new { Area = "CodeSanook.Comment", ReturnUrl = Context.Request.ToUrlString() }),
-                            FormMethod.Post, new { @class = "comment-form" }))
-{
-    @Display(Model.CommentShape)
-    <div class="row">
-        <div class="text-center col-md-4 col-md-offset-4">
-            <button type="submit" class="btn btn-default">@T("Submit Comment")</button>
-        </div>
-    </div>
+    Script.Require("jQuery").AtHead();
+    Script.Require("Bootstrap").AtHead();
+
+    var comments = (List<CommentItemViewModel>)Model.CommentList;
 }
 
 <div class="row comment-block">
     <div class="col-md-12">
-        <h2 class="page-header">@comments.Count comments</h2>
-        <section class="comment-list">
+        @if (comments.Count > 0)
+        {
+            <h2 class="page-header">@comments.Count comments</h2>
+        }
+        else
+        {
+            <h2 class="page-header">Be the first comment</h2>
+        }
 
+        @using (Html.BeginFormAntiForgeryPost(
+                                    Url.Action("Create", "Comment",
+                                    new { Area = "CodeSanook.Comment", ReturnUrl = Context.Request.ToUrlString() }),
+                                    FormMethod.Post, new { @class = "comment-form" }))
+        {
+            @Display(Model.CommentShape)
+            <div class="row">
+                <div class="text-center col-md-4 col-md-offset-4">
+                    <button type="submit" class="btn btn-default">@T("Submit Comment")</button>
+                </div>
+            </div>
+        }
+
+        <section class="comment-list">
             @foreach (var commentItem in comments)
             {
                 var comment = commentItem.Comment;
@@ -99,7 +50,7 @@
                 <article class="row">
 
                     <div class="col-md-2 col-sm-2 hidden-xs">
-                        <figure class="thumbnail">
+                        <figure>
                             <img class="img-responsive" src="@facebookUserPart.ProfilePictureUrl" />
                             <figcaption class="text-center">@commonPart.Owner.UserName</figcaption>
                         </figure>

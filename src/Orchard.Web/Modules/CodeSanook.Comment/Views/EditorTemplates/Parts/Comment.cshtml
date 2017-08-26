@@ -1,6 +1,21 @@
-﻿@model  CodeSanook.Comment.Models.CommentPart
+﻿
+@using CodeSanook.Comment.Models
+@model CommentPart
+@{
+    var isNewComment = Model.Id == 0;
+}
+
 <div class="form-group">
     @Html.HiddenFor(m => m.ContentItemId)
-    @Html.LabelFor(m => m.CommentBody)
+
+    @if (isNewComment)
+    {
+        @Html.LabelFor(m => m.CommentBody, T("new comment"))
+    }
+    else
+    {
+        @Html.LabelFor(m => m.CommentBody)
+    }
+
     @Html.TextAreaFor(m => m.CommentBody, new { @class = "form-control", rows = "3" })
 </div>

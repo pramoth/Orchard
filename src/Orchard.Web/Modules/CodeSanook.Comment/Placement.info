@@ -4,8 +4,12 @@
   <Match DisplayType="Detail">
     <Place Parts_CommentContainer="Content:10"/>
   </Match>
-  
-  <Match ContentType="Comment">
+ 
+  <Match Path="/*">
     <Place Content_SaveButton="-"/><!--Show default save button only on admin-->
+  </Match>
+  
+  <Match Path="/admin/*">
+    <Place Content_SaveButton="Content:10"/><!--Show default save button only on admin-->
   </Match>
 </Placement>

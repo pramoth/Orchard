@@ -159,47 +159,6 @@
     <Content Include="Views\Parts.Tags.ShowTags.Details.cshtml" />
     <Content Include="Views\Parts.Common.Body.cshtml" />
     <Content Include="Views\Orchard.Users\Account\ChangePassword.cshtml" />
-    <Content Include="Assets\bootstrap\alerts.less" />
-    <Content Include="Assets\bootstrap\badges.less" />
-    <Content Include="Assets\bootstrap\bootstrap.less" />
-    <Content Include="Assets\bootstrap\breadcrumbs.less" />
-    <Content Include="Assets\bootstrap\button-groups.less" />
-    <Content Include="Assets\bootstrap\buttons.less" />
-    <Content Include="Assets\bootstrap\carousel.less" />
-    <Content Include="Assets\bootstrap\close.less" />
-    <Content Include="Assets\bootstrap\code.less" />
-    <Content Include="Assets\bootstrap\component-animations.less" />
-    <Content Include="Assets\bootstrap\dropdowns.less" />
-    <Content Include="Assets\bootstrap\forms.less" />
-    <Content Include="Assets\bootstrap\glyphicons.less" />
-    <Content Include="Assets\bootstrap\grid.less" />
-    <Content Include="Assets\bootstrap\input-groups.less" />
-    <Content Include="Assets\bootstrap\jumbotron.less" />
-    <Content Include="Assets\bootstrap\labels.less" />
-    <Content Include="Assets\bootstrap\list-group.less" />
-    <Content Include="Assets\bootstrap\media.less" />
-    <Content Include="Assets\bootstrap\mixins.less" />
-    <Content Include="Assets\bootstrap\modals.less" />
-    <Content Include="Assets\bootstrap\navbar.less" />
-    <Content Include="Assets\bootstrap\navs.less" />
-    <Content Include="Assets\bootstrap\normalize.less" />
-    <Content Include="Assets\bootstrap\pager.less" />
-    <Content Include="Assets\bootstrap\pagination.less" />
-    <Content Include="Assets\bootstrap\panels.less" />
-    <Content Include="Assets\bootstrap\popovers.less" />
-    <Content Include="Assets\bootstrap\print.less" />
-    <Content Include="Assets\bootstrap\progress-bars.less" />
-    <Content Include="Assets\bootstrap\responsive-utilities.less" />
-    <Content Include="Assets\bootstrap\scaffolding.less" />
-    <Content Include="Assets\bootstrap\tables.less" />
-    <Content Include="Assets\bootstrap\theme.less" />
-    <Content Include="Assets\bootstrap\thumbnails.less" />
-    <Content Include="Assets\bootstrap\tooltip.less" />
-    <Content Include="Assets\bootstrap\type.less" />
-    <Content Include="Assets\bootstrap\utilities.less" />
-    <Content Include="Assets\bootstrap\variables.less" />
-    <Content Include="Assets\bootstrap\wells.less" />
-    <Content Include="Assets\Less\styles.less" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Orchard.Users\Account\LostPassword.cshtml" />
@@ -243,12 +202,51 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\bootstrap\responsive-embed.less" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Assets.json" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Elements\Button.cshtml" />
+    <Content Include="Views\Elements\Column.cshtml" />
+    <Content Include="Views\Elements\EmailField.cshtml" />
+    <Content Include="Views\Elements\Grid.cshtml" />
+    <Content Include="Views\Elements\Row.cshtml" />
+    <Content Include="Views\Elements\TextArea.cshtml" />
+    <Content Include="Views\Elements\TextField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+    <Content Include="Views\Parts.MenuWidget.cshtml" />
+    <Content Include="Views\MenuItemLink.cshtml" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Views\LogOn2.cshtml" />
+    <Content Include="Scss\theme-style.scss" />
+    <Content Include="sass-watch.bat" />
+    <Content Include="Assets\bootstrap\alerts.less" />
+    <Content Include="Assets\bootstrap\badges.less" />
+    <Content Include="Assets\bootstrap\bootstrap.less" />
+    <Content Include="Assets\bootstrap\breadcrumbs.less" />
+    <Content Include="Assets\bootstrap\button-groups.less" />
+    <Content Include="Assets\bootstrap\buttons.less" />
+    <Content Include="Assets\bootstrap\carousel.less" />
+    <Content Include="Assets\bootstrap\close.less" />
+    <Content Include="Assets\bootstrap\code.less" />
+    <Content Include="Assets\bootstrap\component-animations.less" />
+    <Content Include="Assets\bootstrap\dropdowns.less" />
+    <Content Include="Assets\bootstrap\forms.less" />
+    <Content Include="Assets\bootstrap\glyphicons.less" />
+    <Content Include="Assets\bootstrap\grid.less" />
+    <Content Include="Assets\bootstrap\input-groups.less" />
+    <Content Include="Assets\bootstrap\jumbotron.less" />
+    <Content Include="Assets\bootstrap\labels.less" />
+    <Content Include="Assets\bootstrap\list-group.less" />
+    <Content Include="Assets\bootstrap\media.less" />
+    <Content Include="Assets\bootstrap\mixins.less" />
     <Content Include="Assets\bootstrap\mixins\alerts.less" />
     <Content Include="Assets\bootstrap\mixins\background-variant.less" />
     <Content Include="Assets\bootstrap\mixins\border-radius.less" />
@@ -279,30 +277,28 @@
     <Content Include="Assets\bootstrap\mixins\text-emphasis.less" />
     <Content Include="Assets\bootstrap\mixins\text-overflow.less" />
     <Content Include="Assets\bootstrap\mixins\vendor-prefixes.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Elements\Button.cshtml" />
-    <Content Include="Views\Elements\Column.cshtml" />
-    <Content Include="Views\Elements\EmailField.cshtml" />
-    <Content Include="Views\Elements\Grid.cshtml" />
-    <Content Include="Views\Elements\Row.cshtml" />
-    <Content Include="Views\Elements\TextArea.cshtml" />
-    <Content Include="Views\Elements\TextField.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="packages.config" />
-    <Content Include="Views\Parts.MenuWidget.cshtml" />
-    <Content Include="Views\MenuItemLink.cshtml" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="Views\LogOn2.cshtml" />
-    <Content Include="Scss\theme-style.scss" />
-    <Content Include="sass-watch.bat" />
+    <Content Include="Assets\bootstrap\modals.less" />
+    <Content Include="Assets\bootstrap\navbar.less" />
+    <Content Include="Assets\bootstrap\navs.less" />
+    <Content Include="Assets\bootstrap\normalize.less" />
+    <Content Include="Assets\bootstrap\pager.less" />
+    <Content Include="Assets\bootstrap\pagination.less" />
+    <Content Include="Assets\bootstrap\panels.less" />
+    <Content Include="Assets\bootstrap\popovers.less" />
+    <Content Include="Assets\bootstrap\print.less" />
+    <Content Include="Assets\bootstrap\progress-bars.less" />
+    <Content Include="Assets\bootstrap\responsive-embed.less" />
+    <Content Include="Assets\bootstrap\responsive-utilities.less" />
+    <Content Include="Assets\bootstrap\scaffolding.less" />
+    <Content Include="Assets\bootstrap\tables.less" />
+    <Content Include="Assets\bootstrap\theme.less" />
+    <Content Include="Assets\bootstrap\thumbnails.less" />
+    <Content Include="Assets\bootstrap\tooltip.less" />
+    <Content Include="Assets\bootstrap\type.less" />
+    <Content Include="Assets\bootstrap\utilities.less" />
+    <Content Include="Assets\bootstrap\variables.less" />
+    <Content Include="Assets\bootstrap\wells.less" />
+    <Content Include="Assets\Less\styles.less" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

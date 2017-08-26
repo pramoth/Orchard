@@ -102,10 +102,14 @@
     <Compile Include="Models\CommentPartRecord.cs" />
     <Compile Include="Models\CommentContainerPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceRegistration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets.json" />
     <Content Include="Assets\Styles.less" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="Styles\comment-style.css" />
+    <Content Include="Styles\font-awesome.css" />
+    <Content Include="Styles\font-awesome.min.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -144,6 +148,35 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Comment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\FontAwesome.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scss\font-awesome.scss" />
+    <Content Include="Scss\_animated.scss" />
+    <Content Include="Scss\_bordered-pulled.scss" />
+    <Content Include="Scss\_core.scss" />
+    <Content Include="Scss\_fixed-width.scss" />
+    <Content Include="Scss\_icons.scss" />
+    <Content Include="Scss\_larger.scss" />
+    <Content Include="Scss\_list.scss" />
+    <Content Include="Scss\_mixins.scss" />
+    <Content Include="Scss\_path.scss" />
+    <Content Include="Scss\_rotated-flipped.scss" />
+    <Content Include="Scss\_screen-reader.scss" />
+    <Content Include="Scss\_stacked.scss" />
+    <Content Include="Scss\_variables.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sass-watch.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scss\comment-style.scss" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
