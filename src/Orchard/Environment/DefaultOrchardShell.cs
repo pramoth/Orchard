@@ -13,6 +13,7 @@ using Orchard.UI;
 using Orchard.WebApi.Routes;
 using Orchard.Exceptions;
 using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
+using System.Web.Routing;
 
 namespace Orchard.Environment {
     public class DefaultOrchardShell : IOrchardShell {
@@ -72,6 +73,15 @@ namespace Orchard.Environment {
             var allRoutes = new List<RouteDescriptor>();
             allRoutes.AddRange(_routeProviders.SelectMany(provider => provider.GetRoutes()));
             allRoutes.AddRange(_httpRouteProviders.SelectMany(provider => provider.GetRoutes()));
+          var result=  allRoutes.Select(a => {
+                var route = a.Route as Route;
+                if (route != null) {
+                    return string.Format("path {0} priority {1}", route.Url,a.Priority);
+                }
+                return "";
+            });
+
+            var resultFormat = string.Join("\n", result);
 
             _routePublisher.Publish(allRoutes, pipeline);
             _modelBinderPublisher.Publish(_modelBinderProviders.SelectMany(provider => provider.GetModelBinders()));

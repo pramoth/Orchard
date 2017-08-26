@@ -224,7 +224,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="Views\LogOn2.cshtml" />
+    <Content Include="Views\LogOn.cshtml" />
     <Content Include="Scss\theme-style.scss" />
     <Content Include="sass-watch.bat" />
     <Content Include="Assets\bootstrap\alerts.less" />
