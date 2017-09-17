@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
 EndProject
@@ -289,6 +289,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSanook.Configuration", "Orchard.Web\Modules\CodeSanook.Configuration\CodeSanook.Configuration.csproj", "{55A5AF31-438D-4712-B8B6-EE01327842AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSanook.Comment", "Orchard.Web\Modules\CodeSanook.Comment\CodeSanook.Comment.csproj", "{57E73928-1927-4497-81D0-1500C10CE269}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSanook.Api", "Orchard.Web\Modules\CodeSanook.Api\CodeSanook.Api.csproj", "{FF2503D7-8BA1-4055-8449-C97F75E96813}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1180,6 +1182,16 @@ Global
 		{57E73928-1927-4497-81D0-1500C10CE269}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{57E73928-1927-4497-81D0-1500C10CE269}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57E73928-1927-4497-81D0-1500C10CE269}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF2503D7-8BA1-4055-8449-C97F75E96813}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{FF2503D7-8BA1-4055-8449-C97F75E96813}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{FF2503D7-8BA1-4055-8449-C97F75E96813}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{FF2503D7-8BA1-4055-8449-C97F75E96813}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{FF2503D7-8BA1-4055-8449-C97F75E96813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF2503D7-8BA1-4055-8449-C97F75E96813}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF2503D7-8BA1-4055-8449-C97F75E96813}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{FF2503D7-8BA1-4055-8449-C97F75E96813}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{FF2503D7-8BA1-4055-8449-C97F75E96813}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF2503D7-8BA1-4055-8449-C97F75E96813}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1274,8 +1286,10 @@ Global
 		{F7A05B63-9397-4C6A-B625-EDD5D0D55675} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{55A5AF31-438D-4712-B8B6-EE01327842AE} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{57E73928-1927-4497-81D0-1500C10CE269} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{FF2503D7-8BA1-4055-8449-C97F75E96813} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4
+		SolutionGuid = {3381143E-93F2-423C-9092-8CB3D5D3A551}
 	EndGlobalSection
 EndGlobal
