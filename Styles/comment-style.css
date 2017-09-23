@@ -1,0 +1,68 @@
+.comment-block {
+  margin-top: 10px; }
+
+.comment-block .page-header {
+  margin-top: 20px; }
+
+.comment-list {
+  margin-top: 20px; }
+  .comment-list .row {
+    margin-bottom: 0px; }
+  .comment-list .panel .panel-heading {
+    padding: 4px 15px;
+    border: none;
+    /*Panel-heading border radius*/
+    border-top-right-radius: 0px;
+    top: 1px; }
+  .comment-list .panel {
+    margin: 10px 0;
+    min-height: 162px;
+    position: relative; }
+  .comment-list .panel .panel-heading .panel-body {
+    padding-top: 6px; }
+  .comment-list figcaption {
+    /*For wrapping text in thumbnail*/
+    word-wrap: break-word; }
+  .comment-list .comment-post {
+    margin-top: 6px; }
+  .comment-list .img-responsive {
+    height: 120px;
+    width: auto;
+    padding: 0;
+    margin: 0px auto; }
+  .comment-list figure {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    margin: 10px 0;
+    padding: 10px; }
+  .comment-list figcaption {
+    border: 0;
+    margin: 0;
+    padding: 5px 5px 0 5px;
+    height: 20px; }
+
+/*
+.col-xs-$	Extra Small	Phones Less than 768px
+.col-sm-$	Small Devices	Tablets 768px and Up
+.col-md-$	Medium Devices	Desktops 992px and Up
+.col-lg-$	Large Devices	Large Desktops 1200px and Up
+*/
+/*enable when screen equal or greater than 768px*/
+@media (min-width: 768px) {
+  .arrow:before {
+    content: "";
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-right: 20px solid #DDD;
+    position: absolute;
+    left: -20px;
+    top: 20px; }
+
+  .arrow:after {
+    content: "";
+    border-top: 19px solid transparent;
+    border-right: 19px solid #FFF;
+    border-bottom: 19px solid transparent;
+    position: absolute;
+    left: -19px;
+    top: 21px; } }
