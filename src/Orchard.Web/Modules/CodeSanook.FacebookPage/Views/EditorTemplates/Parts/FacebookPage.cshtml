@@ -1,0 +1,13 @@
+﻿@model CodeSanook.FacebookPage.Models.FacebookPagePart
+
+<fieldset>
+  <legend>Facebook Page Fields</legend>
+  <div class="editor-label">
+    @Html.LabelFor(model => model.Href)
+  </div>
+  <div class="editor-field">
+    @Html.TextBoxFor(model => model.Href)
+    @Html.ValidationMessageFor(model => model.Href)
+  </div>
+
+</fieldset>

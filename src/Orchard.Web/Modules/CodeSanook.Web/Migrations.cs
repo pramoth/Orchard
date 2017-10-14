@@ -74,6 +74,7 @@ namespace CodeSanook.Web
                 "CodeSanook.AmazonS3",
                 "Markdown",
                 "CodeSanook.FacebookConnect",
+                "CodeSanook.FacebookPage",
                 "CodeSanook.Comment"
             });
             DisableModules(new[]
