@@ -7,7 +7,7 @@ namespace Orchard.Gallery
         public void BuildManifests(ResourceManifestBuilder builder)
         {
             var manifest = builder.Add();
-            manifest.DefineStyle("ThemeStyle").SetUrl("theme-style.js");
+            manifest.DefineStyle("ThemeStyle").SetUrl("theme-style.css");
         }
     }
 }
