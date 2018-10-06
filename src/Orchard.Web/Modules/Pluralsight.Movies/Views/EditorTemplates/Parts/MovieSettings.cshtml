@@ -1,0 +1,67 @@
+﻿@using Pluralsight.Movies.Models
+@using Pluralsight.Movies.ViewModels
+
+@model MovieEditViewModel
+@{
+    Script.Require("jQuery");
+
+    var ratingSelectListItems = Enum.GetNames(typeof(MPAARating))
+        .Select(r => new SelectListItem()
+        {
+            Text = r,
+            Value = r,
+            Selected = r == Model.Rating.ToString()
+        });
+}
+
+
+<fieldset>
+    <legend>@T("Details")</legend>
+    @Html.LabelFor(m => m.IMDB_Id, T("IMDB ID"))
+    @Html.TextBoxFor(m => m.IMDB_Id)
+    @Html.LabelFor(m => m.YearReleased, T("Year Released"))
+    @Html.TextBoxFor(m => m.YearReleased)
+    @Html.LabelFor(m => m.Rating, T("MPAA Rating"))
+    @Html.DropDownListFor(m => m.Rating, ratingSelectListItems)
+</fieldset>
+<fieldset>
+    <legend>@T("Actors")</legend>
+    @Html.DropDownList("AllActors", new SelectList(Model.AllActors, "Id", "Name"), "Select actor to add...")
+    <input type="button" id="AddActor" value="Add" />
+    <ul id="actorList">
+        @foreach(var actorId in Model.Actors) {
+            <li data-actorid="@actorId"><a href="" class="delete">X</a>  @(Model.AllActors.First(a => a.Id == actorId).Name)</li>
+        }
+    </ul>
+    @foreach (var actorId in Model.Actors) {
+        <text>@Html.Hidden("Actors", actorId)</text>
+    }
+</fieldset>
+
+@using(Script.Foot()) {
+    //put this script at the footer of page
+    <script type="text/javascript">
+        $(function () {
+            $("#AddActor").click(function () {
+                var selectedActor = $("#Movie_AllActors option:selected");
+                if (selectedActor.val() != "") {
+                    $("#actorList").append("<li data-actorid='" + selectedActor.val() + "'><a href='' class='delete'>X</a>  " + selectedActor.text() + "</li>");
+                    $('<input>').attr({
+                        type: 'hidden',
+                        id: 'Movie_Actors',
+                        name: 'Movie.Actors',
+                        value: selectedActor.val()
+                    }).appendTo('form');
+                }
+            });
+
+            $(document).on("click", "#actorList .delete", function () {
+                var $actorListItem = $(this).parent("li");
+                var actorIdToDelete = $actorListItem.data("actorid");
+                $("#Movie_Actors[value='" + actorIdToDelete + "']").remove();
+                $actorListItem.remove();
+                return false;
+            });
+        });
+    </script>
+}

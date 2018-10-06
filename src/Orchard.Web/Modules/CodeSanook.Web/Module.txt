@@ -1,0 +1,11 @@
+﻿Name: CodeSanook.Web
+AntiForgery: enabled
+Author: Aaron
+Website: http://codesanook.com
+Version: 1.0
+OrchardVersion: 1.0
+Description: Description for the module
+Category: Web
+Features:
+    CodeSanook.Web:
+        Description: Description for feature CodeSanook.Web.

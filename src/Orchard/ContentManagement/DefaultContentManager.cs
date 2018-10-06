@@ -673,7 +673,6 @@ namespace Orchard.ContentManagement {
             };
 
             Handlers.Invoke(handler => handler.GetContentItemMetadata(context), Logger);
-
             return context.Metadata;
         }
 

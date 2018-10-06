@@ -26,7 +26,9 @@ namespace Orchard.Comments.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
                 return this.RedirectLocal(returnUrl, "~/");
 
+            //new comment
             var comment = Services.ContentManager.New<CommentPart>("Comment");
+            //bind data
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
 
             if (!ModelState.IsValidField("Comments.Author")) {

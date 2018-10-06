@@ -11,6 +11,13 @@
             </div>
         }
     </div>
+
+@if (Model.Meta != null)
+{
+    @Display(Model.Meta)
+
+}
+
     <div class="edit-item-secondary group">
         @if (Model.Actions != null) {
             <div class="edit-item-actions">

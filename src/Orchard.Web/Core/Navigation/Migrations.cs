@@ -113,6 +113,7 @@ namespace Orchard.Core.Navigation {
                 .Column<int>("Menu_id")
                 );
 
+            //We create menu Widget here
             ContentDefinitionManager.AlterTypeDefinition("MenuWidget", cfg => cfg
                 .WithPart("CommonPart")
                 .WithIdentity()

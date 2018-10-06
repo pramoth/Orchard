@@ -64,6 +64,7 @@ namespace Orchard.MediaLibrary.Controllers {
             return View(viewModel);
         }
 
+        //upload file image to this controller
         [HttpPost]
         public ActionResult Upload(string folderPath, string type) {
             if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, folderPath)) {

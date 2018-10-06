@@ -1,0 +1,14 @@
+﻿article.movie {
+    float: left;
+    width: 500px;
+    margin-right: 30px;
+}
+
+aside.movieDetails {
+    float: right;
+    margin-top: 57px;
+}
+
+.taxonomy-field {
+    margin-top: 15px;
+}
