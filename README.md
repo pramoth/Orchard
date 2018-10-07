@@ -1,0 +1,2 @@
+# CodeSanook.ThailandAdministrativeDivision
+export ThailandAdministrativeDivision to SQL script
