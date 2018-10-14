@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using NHibernate;
 using NHibernate.Criterion;
 using NHibernate.Impl;
-using NHibernate.Linq;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using NHibernate.Transform;
 using NHibernate.SqlCommand;
 using Orchard.Utility.Extensions;
 using Orchard.Caching;
+using NHibernate;
+using NHibernate.Linq;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentQuery : IContentQuery {

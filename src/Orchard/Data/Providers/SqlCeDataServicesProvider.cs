@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.IO;
 using System.Reflection;
 using FluentNHibernate.Cfg.Db;
@@ -81,8 +82,8 @@ namespace Orchard.Data.Providers {
                     _dbParamSqlDbTypeProperty = dbParam.GetType().GetProperty("SqlDbType");
                 }
             }
-
-            protected override void InitializeParameter(IDbDataParameter dbParam, string name, SqlType sqlType) {
+            protected override void InitializeParameter(DbParameter dbParam, string name, SqlType sqlType)
+            {
                 base.InitializeParameter(dbParam, name, sqlType);
 
                 if(sqlType.DbType == DbType.Binary) {
@@ -120,9 +121,10 @@ namespace Orchard.Data.Providers {
         /// Custom driver so that Text/NText fields are not truncated at 4000 characters
         /// </summary>
         public class CustomSqlServerCeDriver : SqlServerCeDriver {
-            protected override void InitializeParameter(IDbDataParameter dbParam, string name, SqlType sqlType) {
-                base.InitializeParameter(dbParam, name, sqlType);
 
+            protected override void InitializeParameter(DbParameter dbParam, string name, SqlType sqlType)
+            {
+                base.InitializeParameter(dbParam, name, sqlType);
                 PropertyInfo dbParamSqlDbTypeProperty = dbParam.GetType().GetProperty("SqlDbType");
 
                 if (sqlType.Length <= 4000) {
@@ -137,6 +139,7 @@ namespace Orchard.Data.Providers {
                         dbParamSqlDbTypeProperty.SetValue(dbParam, SqlDbType.Text, null);
                         break;
                 }
+
             }
         }
 

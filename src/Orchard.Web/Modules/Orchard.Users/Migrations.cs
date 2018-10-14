@@ -30,39 +30,5 @@ namespace Orchard.Users {
 
             return 1;
         }
-
-        public int UpdateFrom1() {
-            ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
-
-            return 2;
-        }
-
-        public int UpdateFrom2() {
-            SchemaBuilder.AlterTable("UserPartRecord",
-                table => {
-                    table.AddColumn<DateTime>("CreatedUtc");
-                    table.AddColumn<DateTime>("LastLoginUtc");
-                });
-
-            return 3;
-        }
-
-        public int UpdateFrom3() {
-            SchemaBuilder.AlterTable("UserPartRecord",
-                table => {
-                    table.AddColumn<DateTime>("LastLogoutUtc");
-                });
-
-            return 4;
-        }
-
-        public int UpdateFrom4() {
-            SchemaBuilder.AlterTable("UserPartRecord",
-                table => {
-                    table.AddColumn<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1)));
-                });
-
-            return 5;
-        }
     }
 }

@@ -192,9 +192,10 @@ namespace Orchard.Data {
                 return retVal.Length == 0 ? null : retVal;
             }
 
-            object IInterceptor.Instantiate(string entityName, EntityMode entityMode, object id) {
+            object IInterceptor.Instantiate(string entityName, object id)
+            {
                 if (_interceptors.Length == 0) return null;
-                return _interceptors.Invoke(i => i.Instantiate(entityName, entityMode, id), _logger).FirstOrDefault(r => r != null);
+                return _interceptors.Invoke(i => i.Instantiate(entityName, id), _logger).FirstOrDefault(r => r != null);
             }
 
             string IInterceptor.GetEntityName(object entity) {
@@ -253,6 +254,11 @@ namespace Orchard.Data {
 
             private static bool IsLogged(Exception ex) {
                 return ex is OrchardSecurityException || !ex.IsFatal();
+            }
+
+            public object Instantiate(string entityName, object id)
+            {
+                throw new NotImplementedException();
             }
         }
     }
